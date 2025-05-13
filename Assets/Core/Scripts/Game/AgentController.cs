@@ -6,6 +6,7 @@ namespace Client.Game
     [RequireComponent(typeof(NavMeshAgent))]
     public class AgentController : MonoBehaviour
     {
+        public int Button = 0;
         private NavMeshAgent _agent;
         private Camera _mainCamera;
 
@@ -18,7 +19,7 @@ namespace Client.Game
 
         void Update()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(Button))
             {
                 var ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
 
