@@ -24,6 +24,11 @@ namespace Client.Game
 
                 if (Physics.Raycast(ray, out var hit))
                 {
+                    if (LayerMask.LayerToName(hit.transform.gameObject.layer) != "Ground")
+                    {
+                        Debug.Log("No Path");
+                        return;
+                    }
                     var agentPath = new NavMeshPath();
                     if (_agent.CalculatePath(hit.point, agentPath) && 
                         agentPath.status == NavMeshPathStatus.PathComplete)

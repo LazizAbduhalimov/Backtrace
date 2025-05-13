@@ -6,13 +6,14 @@ namespace Client
 {
     public class DoorMb : MonoBehaviour
     {
-        private bool _isOpen;
+        [SerializeField] private bool _isOpen;
         private Tween? _tween;
         private Vector3 _defaultPosition;
 
         private void Start()
         {
             _defaultPosition = transform.position;
+            if (_isOpen) Open();
         }
 
         public void SwitchDoor()
