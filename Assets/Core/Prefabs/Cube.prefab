@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5497414903629916171}
   - component: {fileID: 3204983812868491598}
   - component: {fileID: -3787367799971420611}
-  - component: {fileID: 8632724226857264313}
+  - component: {fileID: -1932936724384167732}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -123,7 +123,7 @@ MonoBehaviour:
   SwaySpeed: {x: 0, y: 0, z: 0}
   ShiftAmount: {x: 0, y: 1, z: 0}
   ShiftSpeed: {x: 0, y: 3, z: 0}
---- !u!114 &8632724226857264313
+--- !u!114 &-1932936724384167732
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -132,7 +132,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 8966073241748010401}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3174c5257d334f7b9546af4e359d22c9, type: 3}
+  m_Script: {fileID: 11500000, guid: d526053a297b4f05ab5d5f67f2d7d92c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  recordDuration: 5
+  Components:
+  - {fileID: -3787367799971420611}

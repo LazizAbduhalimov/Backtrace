@@ -1,7 +1,6 @@
 using Leopotam.EcsLite;
 using UnityEngine;
 using AB_Utility.FromSceneToEntityConverter;
-using Client.Game.Test;
 
 namespace Client {
     public sealed class Startup : MonoBehaviour 

@@ -3,15 +3,17 @@ using UnityEngine.AI;
 
 namespace Client.Game
 {
+    [RequireComponent(typeof(NavMeshAgent))]
     public class AgentController : MonoBehaviour
     {
-        public NavMeshAgent agent;
+        private NavMeshAgent _agent;
         private Camera _mainCamera;
 
         void Start()
         {
+            _agent = GetComponent<NavMeshAgent>();
             _mainCamera = Camera.main;
-            agent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
+            _agent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
         }
 
         void Update()
@@ -23,10 +25,10 @@ namespace Client.Game
                 if (Physics.Raycast(ray, out var hit))
                 {
                     var agentPath = new NavMeshPath();
-                    if (agent.CalculatePath(hit.point, agentPath) && 
+                    if (_agent.CalculatePath(hit.point, agentPath) && 
                         agentPath.status == NavMeshPathStatus.PathComplete)
                     {
-                        agent.SetDestination(Vector3Int.RoundToInt(hit.point));
+                        _agent.SetDestination(Vector3Int.RoundToInt(hit.point));
                         return;
                     }
                     Debug.Log("No Path");

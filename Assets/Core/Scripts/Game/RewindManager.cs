@@ -1,14 +1,15 @@
 using System.Collections.Generic;
-using Client;
-using Client.Game;
 using UnityEngine;
 
 public class RewindManager : MonoBehaviour
 {
+    public float RecordDuration => _recordDuration; 
     public static RewindManager Instance { get; private set; }
-
-    private List<RewindBodyMb> trackedObjects = new ();
-    private bool isRewinding = false;
+    
+    [SerializeField] private float _recordDuration;
+    
+    private readonly List<RewindBodyBase> _trackedObjects = new ();
+    private bool _isRewinding;
 
     private void Awake()
     {
@@ -20,40 +21,39 @@ public class RewindManager : MonoBehaviour
 
     private void Update()
     {
-        // Включить/отключить перемотку на клавишу R (можно заменить)
         if (Input.GetKeyDown(KeyCode.R))
             StartRewind();
         else if (Input.GetKeyUp(KeyCode.R))
             StopRewind();
     }
 
-    public void Register(RewindBodyMb obj)
+    public void Register(RewindBodyBase obj)
     {
-        if (!trackedObjects.Contains(obj))
-            trackedObjects.Add(obj);
+        if (!_trackedObjects.Contains(obj))
+            _trackedObjects.Add(obj);
     }
 
-    public void Unregister(RewindBodyMb obj)
+    public void Unregister(RewindBodyBase obj)
     {
-        if (trackedObjects.Contains(obj))
-            trackedObjects.Remove(obj);
+        if (_trackedObjects.Contains(obj))
+            _trackedObjects.Remove(obj);
     }
 
     public void StartRewind()
     {
-        if (isRewinding) return;
-        isRewinding = true;
+        if (_isRewinding) return;
+        _isRewinding = true;
 
-        foreach (var obj in trackedObjects)
-            obj.StartRewind();
+        foreach (var rewindBodyBase in _trackedObjects)
+            rewindBodyBase.StartRewind();
     }
 
     public void StopRewind()
     {
-        if (!isRewinding) return;
-        isRewinding = false;
+        if (!_isRewinding) return;
+        _isRewinding = false;
 
-        foreach (var obj in trackedObjects)
-            obj.StopRewind();
+        foreach (var rewindBodyBase in _trackedObjects)
+            rewindBodyBase.StopRewind();
     }
 }

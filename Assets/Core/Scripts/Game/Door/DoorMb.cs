@@ -1,0 +1,41 @@
+using System;
+using PrimeTween;
+using UnityEngine;
+
+namespace Client
+{
+    public class DoorMb : MonoBehaviour
+    {
+        private bool _isOpen;
+        private Tween? _tween;
+        private Vector3 _defaultPosition;
+
+        private void Start()
+        {
+            _defaultPosition = transform.position;
+        }
+
+        public void SwitchDoor()
+        {
+            _isOpen = !_isOpen;
+            if (_isOpen) Open();
+            else Close();
+        }
+        
+        public void Open()
+        {
+            _tween?.Stop();
+            _tween = Tween.PositionAtSpeed(
+                transform, _defaultPosition.AddY(-2.5f), 5, Ease.OutSine);
+            Debug.Log($"Opening door {name}");
+        }
+
+        public void Close()
+        {
+            _tween?.Stop();
+            _tween = Tween.PositionAtSpeed(
+                transform, _defaultPosition, 5, Ease.OutSine);
+            Debug.Log($"Closing door {name}");
+        }
+    }
+}

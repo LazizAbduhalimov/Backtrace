@@ -31,7 +31,6 @@ namespace Client.Game
             {
                 LineRenderer.positionCount = 0;
             }
-            Debug.Log(Agent.isStopped);
         }
 
         private void DrawPath(Vector3 target)
