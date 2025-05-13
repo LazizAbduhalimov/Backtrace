@@ -43,18 +43,18 @@ namespace Client {
 
         private void AddInitSystems()
         {
-            _initSystems
-                .AddWorld(_eventWorld, "events")
-                .Add(new InitSystemTest())
-                ;
+            // _initSystems
+            //     .AddWorld(_eventWorld, "events")
+            //     .Add(new InitSystemTest())
+            //     ;
         }
         
         private void AddRunSystems() 
         {
-            _updateSystems
-                .AddWorld(_eventWorld, "events")
-                .Add(new RunSystemTest())
-                ;
+            // _updateSystems
+            //     .AddWorld(_eventWorld, "events")
+            //     .Add(new RunSystemTest())
+            //     ;
         }
 
         private void OnDestroy () 

@@ -6,46 +6,31 @@ namespace Client.Game
     public class AgentController : MonoBehaviour
     {
         public NavMeshAgent agent;
-        public LineRenderer lineRenderer;
+        private Camera _mainCamera;
 
         void Start()
         {
-            // Настройка LineRenderer (можешь подстроить под себя)
-            lineRenderer.positionCount = 0;
-            lineRenderer.startColor = Color.green;
-            lineRenderer.endColor = Color.green;
+            _mainCamera = Camera.main;
             agent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
         }
 
         void Update()
         {
-            // Обработка клика
             if (Input.GetMouseButtonDown(0))
             {
-                var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                var ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
 
                 if (Physics.Raycast(ray, out var hit))
                 {
-                    agent.SetDestination(Vector3Int.RoundToInt(hit.point));
+                    var agentPath = new NavMeshPath();
+                    if (agent.CalculatePath(hit.point, agentPath) && 
+                        agentPath.status == NavMeshPathStatus.PathComplete)
+                    {
+                        agent.SetDestination(Vector3Int.RoundToInt(hit.point));
+                        return;
+                    }
+                    Debug.Log("No Path");
                 }
-            }
-
-            // Обновление линии пути
-            DrawPath();
-        }
-
-        void DrawPath()
-        {
-            if (agent.path.corners.Length < 2)
-            {
-                lineRenderer.positionCount = 0;
-                return;
-            }
-
-            lineRenderer.positionCount = agent.path.corners.Length;
-            for (var i = 0; i < agent.path.corners.Length; i++)
-            {
-                lineRenderer.SetPosition(i, agent.path.corners[i]);
             }
         }
     }
