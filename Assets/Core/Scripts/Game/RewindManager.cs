@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class RewindManager : MonoBehaviour
@@ -10,6 +11,8 @@ public class RewindManager : MonoBehaviour
     
     private readonly List<RewindBodyBase> _trackedObjects = new ();
     private bool _isRewinding;
+
+    public int RewindLength => _trackedObjects.First().FramesLeft;
 
     private void Awake()
     {

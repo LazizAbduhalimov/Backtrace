@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class RewindBodyBase : MonoBehaviour
 {
+    public int FramesLeft => _frames.Count;
     private List<RewindBodyData> _frames = new();
     private int _maxFrames;
     private bool _isRewinding;
