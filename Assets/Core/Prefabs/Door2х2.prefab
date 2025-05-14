@@ -30,8 +30,8 @@ Transform:
   m_GameObject: {fileID: 920168197007772561}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -0.0625, y: -2, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -0.06300024, y: -2, z: -0.25000003}
+  m_LocalScale: {x: 1, y: 1, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5288262026449333183}
@@ -723,7 +723,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 3568
+  m_VersionIndex: 3571
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -914,8 +914,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4613795586978438088}
   - {fileID: 5644313883728137810}
+  - {fileID: 4613795586978438088}
   m_Father: {fileID: 2134726863946933961}
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!1 &6217722677019772427
@@ -1271,7 +1271,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 3568
+  m_VersionIndex: 3571
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -1624,7 +1624,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 3424
+  m_VersionIndex: 3427
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -1741,6 +1741,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Line
       objectReference: {fileID: 0}
+    - target: {fileID: 1239329416615775225, guid: ba6720b03cab1804b9a4d7e1e676a6e4, type: 3}
+      propertyPath: m_VersionIndex
+      value: 3571
+      objectReference: {fileID: 0}
     - target: {fileID: 3027042849541120052, guid: ba6720b03cab1804b9a4d7e1e676a6e4, type: 3}
       propertyPath: m_LocalScale.z
       value: 1
@@ -1805,6 +1809,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3920531355417876103, guid: ba6720b03cab1804b9a4d7e1e676a6e4, type: 3}
+      propertyPath: m_Center.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3920531355417876103, guid: ba6720b03cab1804b9a4d7e1e676a6e4, type: 3}
+      propertyPath: m_Center.z
+      value: -0.125
+      objectReference: {fileID: 0}
+    - target: {fileID: 3920531355417876103, guid: ba6720b03cab1804b9a4d7e1e676a6e4, type: 3}
+      propertyPath: m_Extents.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3920531355417876103, guid: ba6720b03cab1804b9a4d7e1e676a6e4, type: 3}
+      propertyPath: m_Extents.z
+      value: 0.125
+      objectReference: {fileID: 0}
     - target: {fileID: 4542967494009016081, guid: ba6720b03cab1804b9a4d7e1e676a6e4, type: 3}
       propertyPath: m_Name
       value: Line 2
@@ -1823,7 +1843,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5620356721479085073, guid: ba6720b03cab1804b9a4d7e1e676a6e4, type: 3}
       propertyPath: m_VersionIndex
-      value: 381
+      value: 384
       objectReference: {fileID: 0}
     - target: {fileID: 5620356721479085073, guid: ba6720b03cab1804b9a4d7e1e676a6e4, type: 3}
       propertyPath: m_SelectedEdges.Array.size
@@ -2065,6 +2085,10 @@ PrefabInstance:
       propertyPath: m_SelectedVertices.Array.data[3]
       value: 19
       objectReference: {fileID: 0}
+    - target: {fileID: 6611419373114973438, guid: ba6720b03cab1804b9a4d7e1e676a6e4, type: 3}
+      propertyPath: m_VersionIndex
+      value: 3427
+      objectReference: {fileID: 0}
     - target: {fileID: 6855100843882305335, guid: ba6720b03cab1804b9a4d7e1e676a6e4, type: 3}
       propertyPath: m_Name
       value: Line 1
@@ -2076,6 +2100,10 @@ PrefabInstance:
     - target: {fileID: 7838518974345863029, guid: ba6720b03cab1804b9a4d7e1e676a6e4, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9184561791546409727, guid: ba6720b03cab1804b9a4d7e1e676a6e4, type: 3}
+      propertyPath: m_VersionIndex
+      value: 3571
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

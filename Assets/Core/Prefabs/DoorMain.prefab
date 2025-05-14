@@ -1071,7 +1071,6 @@ GameObject:
   - component: {fileID: 1824883062057409887}
   - component: {fileID: 2404663866434166108}
   - component: {fileID: 1747615505686551930}
-  - component: {fileID: 367672833474802751}
   - component: {fileID: 3920531355417876103}
   - component: {fileID: 8397583940291267759}
   - component: {fileID: 5620356721479085073}
@@ -1177,28 +1176,6 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7838518974345863029}
-  m_Mesh: {fileID: 0}
---- !u!64 &367672833474802751
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7838518974345863029}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
   m_Mesh: {fileID: 0}
 --- !u!208 &3920531355417876103
 NavMeshObstacle:
