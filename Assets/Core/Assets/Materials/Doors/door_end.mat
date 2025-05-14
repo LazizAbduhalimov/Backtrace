@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: RemovableKey
+  m_Name: door_end
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -79,6 +79,6 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.26981127, g: 0.8041234, b: 1, a: 1}
-    - _EmissionColor: {r: 0.43913847, g: 0.57713294, b: 0.87169814, a: 1}
+    - _Color: {r: 0.85660374, g: 0.85660374, b: 0.85660374, a: 1}
+    - _EmissionColor: {r: 1.6621785, g: 1.6294512, b: 1.4771434, a: 1}
   m_BuildTextureStacks: []

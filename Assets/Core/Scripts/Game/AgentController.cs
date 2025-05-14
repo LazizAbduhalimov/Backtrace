@@ -25,7 +25,8 @@ namespace Client.Game
 
                 if (Physics.Raycast(ray, out var hit))
                 {
-                    if (LayerMask.LayerToName(hit.transform.gameObject.layer) != "Ground")
+                    var layerName = LayerMask.LayerToName(hit.transform.gameObject.layer);
+                    if (layerName != "Ground" && layerName != "End")
                     {
                         Debug.Log("No Path");
                         return;

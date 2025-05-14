@@ -21,7 +21,6 @@ namespace Client.Game
             if (_agent.velocity.sqrMagnitude > 0.1f)
             {
                 var direction = _agent.velocity.normalized;
-                Debug.Log(direction);
                 var targetRotation = Quaternion.LookRotation(direction);
                 if (_rotationSpeed > 0)
                     transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation,

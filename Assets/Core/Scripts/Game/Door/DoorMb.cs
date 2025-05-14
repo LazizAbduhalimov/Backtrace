@@ -7,13 +7,18 @@ namespace Client
     public class DoorMb : MonoBehaviour
     {
         [SerializeField] private bool _isOpen;
+        
         private Tween? _tween;
         private Vector3 _defaultPosition;
 
         private void Start()
         {
             _defaultPosition = transform.position;
-            if (_isOpen) Open();
+            if (_isOpen)
+            {
+                Open();
+                _tween?.Complete();
+            }
         }
 
         public void SwitchDoor()
@@ -27,7 +32,7 @@ namespace Client
         {
             _tween?.Stop();
             _tween = Tween.PositionAtSpeed(
-                transform, _defaultPosition.AddY(-2.5f), 5, Ease.OutSine);
+                transform, _defaultPosition.AddY(-2.25f), 5, Ease.OutSine);
             Debug.Log($"Opening door {name}");
         }
 

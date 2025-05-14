@@ -1,16 +1,19 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class RewindManager : MonoBehaviour
 {
+    public int FramePerStepRewind => 2;
     public float RecordDuration => _recordDuration; 
     public static RewindManager Instance { get; private set; }
     
     [SerializeField] private float _recordDuration;
     
     private readonly List<RewindBodyBase> _trackedObjects = new ();
-    private bool _isRewinding;
+    public bool IsRewinding { get; private set; }
 
     public int RewindLength => _trackedObjects.First().FramesLeft;
 
@@ -44,8 +47,8 @@ public class RewindManager : MonoBehaviour
 
     public void StartRewind()
     {
-        if (_isRewinding) return;
-        _isRewinding = true;
+        if (IsRewinding) return;
+        IsRewinding = true;
 
         foreach (var rewindBodyBase in _trackedObjects)
             rewindBodyBase.StartRewind();
@@ -53,8 +56,8 @@ public class RewindManager : MonoBehaviour
 
     public void StopRewind()
     {
-        if (!_isRewinding) return;
-        _isRewinding = false;
+        if (!IsRewinding) return;
+        IsRewinding = false;
 
         foreach (var rewindBodyBase in _trackedObjects)
             rewindBodyBase.StopRewind();

@@ -23,7 +23,12 @@ public class RewindBodyBase : MonoBehaviour
     private void FixedUpdate()
     {
         if (_isRewinding)
-            RewindStep();
+        {
+            for (var r = 0; r < RewindManager.Instance.FramePerStepRewind; r++)
+            {
+                RewindStep();
+            }
+        }
         else
             RecordStep();
     }
