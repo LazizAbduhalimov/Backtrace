@@ -8,7 +8,7 @@ namespace Client.Game
     {
         public NavMeshSurface NavMeshSurface;
 
-        private void Start()
+        private void Awake()
         {
             NavMeshSurface.BuildNavMesh();
         }
