@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
@@ -12,7 +13,7 @@ namespace Client.Game.AI
         [SerializeField] private FieldOfView _fieldOfView;
         [SerializeField] private float _delay = 1f;
         [SerializeField] private bool _dissapearWhenDoneParoling;
-        public AIPath[] Path;
+        public List<AIPath> Path;
 
         public int Index;
         public float PassedTime;
@@ -25,6 +26,9 @@ namespace Client.Game.AI
 
         private void Start()
         {
+            var newTarget = new GameObject("Origin");
+            newTarget.transform.position = transform.position;
+            Path.Insert(0, new AIPath() {Target = newTarget.transform, TimeToNextPoint = _delay});
             _navMeshAgent = GetComponent<NavMeshAgent>();
             State = AIState.Patrol;
         }
@@ -44,25 +48,14 @@ namespace Client.Game.AI
 
         private void Patrol()
         {
-            if (Index >= Path.Length && _dissapearWhenDoneParoling)
+            if (Index >= Path.Count && _dissapearWhenDoneParoling)
                 gameObject.SetActive(false);
-            if (Path.Length < 1 || Index >= Path.Length) return;
+            if (Path.Count < 1 || Index >= Path.Count) return;
             var path = Path[Index];
-            if (_delayPassed < _delay)
-            {
-                _delayPassed += Time.deltaTime;
-                return;
-            }
-            if (_startedToWalk == false)
-            {
-                _lastDestination = path.Target.position;
-                _navMeshAgent.SetDestination(_lastDestination);
-                _startedToWalk = true;
-            }
             
-            var distance = Vector3.Distance(transform.position.WithY(0), _lastDestination.WithY(0));
+            var distance = Vector3.Distance(transform.position.WithY(0), path.Target.position);
             Debug.DrawRay(transform.position, Vector3.up, Color.cyan);
-            Debug.DrawRay(_lastDestination, Vector3.up, Color.blue);
+            Debug.DrawRay(path.Target.position, Vector3.up, Color.blue);
             if (distance < 0.01f)
                 PassedTime += Time.deltaTime;
             // else 
@@ -73,8 +66,7 @@ namespace Client.Game.AI
                     path.ObjectToInteract.Switch();
                 PassedTime -= path.TimeToNextPoint;
                 Index++;
-                _lastDestination = path.Target.position;
-                _navMeshAgent.SetDestination(path.Target.position);
+                _navMeshAgent.SetDestination(Path[Index].Target.position);
             }
         }
     }
