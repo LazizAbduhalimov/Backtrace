@@ -19,10 +19,15 @@ namespace Client.Game
             var distance = Vector3.Distance(_player.transform.position, OpenPosition.position);
             if (distance < 0.1f)
             {
-                foreach (var doorMb in DoorsMb)
-                {
-                    doorMb.SwitchDoor();
-                }
+                Switch();
+            }
+        }
+
+        public void Switch()
+        {
+            foreach (var doorMb in DoorsMb)
+            {
+                doorMb.SwitchDoor();
             }
         }
     }

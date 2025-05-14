@@ -45,7 +45,6 @@ public class FieldOfView : MonoBehaviour
     {
         var color = VisibleTargets.Count > 0 ? EngageColor : _defaultColor;
         _meshRenderer.material.color = color;
-        Debug.Log("Red");
     }
 
     private void FindVisibleTargets() {
