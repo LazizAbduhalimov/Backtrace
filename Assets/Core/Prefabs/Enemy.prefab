@@ -230,6 +230,7 @@ GameObject:
   - component: {fileID: 8492867580340248409}
   - component: {fileID: 7879447708237717237}
   - component: {fileID: 5892885629602505268}
+  - component: {fileID: 4556360469617988521}
   m_Layer: 2
   m_Name: Enemy
   m_TagString: Untagged
@@ -282,7 +283,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6740110969377153175}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a09027d769874e58ae1ee30164d32df1, type: 3}
   m_Name: 
@@ -327,26 +328,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _fieldOfView: {fileID: 1759512914487784169}
   _delay: 1.5
+  _dissapearWhenDoneParoling: 0
   Path:
   - Target: {fileID: 0}
     TimeToNextPoint: 3
     ObjectToInteract: {fileID: 0}
+    WalkTime: 0
   - Target: {fileID: 0}
     TimeToNextPoint: 1
     ObjectToInteract: {fileID: 0}
+    WalkTime: 0
   - Target: {fileID: 0}
     TimeToNextPoint: 1
     ObjectToInteract: {fileID: 0}
+    WalkTime: 0
   - Target: {fileID: 0}
     TimeToNextPoint: 2
     ObjectToInteract: {fileID: 0}
+    WalkTime: 0
   - Target: {fileID: 0}
     TimeToNextPoint: 1
     ObjectToInteract: {fileID: 0}
+    WalkTime: 0
   - Target: {fileID: 0}
     TimeToNextPoint: 1
     ObjectToInteract: {fileID: 0}
+    WalkTime: 0
+  Index: 0
+  PassedTime: 0
   State: 0
+  Target: {fileID: 0}
 --- !u!136 &5892885629602505268
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -370,6 +381,18 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4556360469617988521
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6740110969377153175}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c3a3e12d6f642ce83737870b0d45e8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8441135743226174598
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,7 +7,7 @@ public class RewindBodyBase : MonoBehaviour
     public int FramesLeft => _frames.Count;
     private List<RewindBodyData> _frames = new();
     private int _maxFrames;
-    private bool _isRewinding;
+    protected bool IsRewinding;
 
     private void Start()
     {
@@ -22,7 +22,12 @@ public class RewindBodyBase : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_isRewinding)
+        RewindCore();
+    }
+
+    protected virtual void RewindCore()
+    {
+        if (IsRewinding)
         {
             for (var r = 0; r < RewindManager.Instance.FramePerStepRewind; r++)
             {
@@ -33,7 +38,7 @@ public class RewindBodyBase : MonoBehaviour
             RecordStep();
     }
 
-    private void RecordStep()
+    protected void RecordStep()
     {
         if (_frames.Count >= _maxFrames)
             _frames.RemoveAt(0);
@@ -45,7 +50,7 @@ public class RewindBodyBase : MonoBehaviour
         });
     }
 
-    private void RewindStep()
+    protected void RewindStep()
     {
         if (_frames.Count > 0)
         {
@@ -60,7 +65,7 @@ public class RewindBodyBase : MonoBehaviour
         }
     }
 
-    public virtual void StartRewind() => _isRewinding = true;
+    public virtual void StartRewind() => IsRewinding = true;
 
-    public virtual void StopRewind() => _isRewinding = false;
+    public virtual void StopRewind() => IsRewinding = false;
 }

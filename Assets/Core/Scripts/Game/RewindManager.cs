@@ -27,10 +27,13 @@ public class RewindManager : MonoBehaviour
 
     private void Update()
     {
+        Debug.Log(Time.timeScale);
         if (Input.GetKeyDown(KeyCode.R))
             StartRewind();
         else if (Input.GetKeyUp(KeyCode.R))
             StopRewind();
+        else if (!IsRewinding &&  Input.anyKeyDown)
+            SetTimeScale(1f);
     }
 
     public void Register(RewindBodyBase obj)
@@ -49,7 +52,6 @@ public class RewindManager : MonoBehaviour
     {
         if (IsRewinding) return;
         IsRewinding = true;
-
         foreach (var rewindBodyBase in _trackedObjects)
             rewindBodyBase.StartRewind();
     }
@@ -61,5 +63,17 @@ public class RewindManager : MonoBehaviour
 
         foreach (var rewindBodyBase in _trackedObjects)
             rewindBodyBase.StopRewind();
+        
+        SetTimeScale(0f);
+    }
+
+    private void SetTimeScale(float timescale)
+    {
+        Time.timeScale = timescale;
+    }
+
+    public bool IsGamePaused()
+    {
+        return Time.timeScale == 0;
     }
 }

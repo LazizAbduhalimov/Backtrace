@@ -14,14 +14,14 @@ namespace Client.Game.AI
         [SerializeField] private bool _dissapearWhenDoneParoling;
         public AIPath[] Path;
 
-        private int _index;
-        private float _passedTime;
+        public int Index;
+        public float PassedTime;
         private float _delayPassed;
         private NavMeshAgent _navMeshAgent;
         private Vector3 _lastDestination;
         private bool _startedToWalk;
         public AIState State;
-        private Transform Target;
+        public Transform Target;
 
         private void Start()
         {
@@ -44,10 +44,10 @@ namespace Client.Game.AI
 
         private void Patrol()
         {
-            if (_index >= Path.Length && _dissapearWhenDoneParoling)
+            if (Index >= Path.Length && _dissapearWhenDoneParoling)
                 gameObject.SetActive(false);
-            if (Path.Length < 1 || _index >= Path.Length) return;
-            var path = Path[_index];
+            if (Path.Length < 1 || Index >= Path.Length) return;
+            var path = Path[Index];
             if (_delayPassed < _delay)
             {
                 _delayPassed += Time.deltaTime;
@@ -64,14 +64,15 @@ namespace Client.Game.AI
             Debug.DrawRay(transform.position, Vector3.up, Color.cyan);
             Debug.DrawRay(_lastDestination, Vector3.up, Color.blue);
             if (distance < 0.01f)
-                _passedTime += Time.deltaTime;
+                PassedTime += Time.deltaTime;
+            // else 
             
-            if (_passedTime >= path.TimeToNextPoint)
+            if (PassedTime >= path.TimeToNextPoint)
             {
                 if (path.ObjectToInteract != null)
                     path.ObjectToInteract.Switch();
-                _passedTime -= path.TimeToNextPoint;
-                _index++;
+                PassedTime -= path.TimeToNextPoint;
+                Index++;
                 _lastDestination = path.Target.position;
                 _navMeshAgent.SetDestination(path.Target.position);
             }
@@ -84,6 +85,7 @@ namespace Client.Game.AI
         public Transform Target;
         public float TimeToNextPoint;
         public DoorKeyMb ObjectToInteract;
+        [HideInInspector] public float WalkTime;
     }
 
     public enum AIState
