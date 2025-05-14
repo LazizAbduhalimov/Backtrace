@@ -28,7 +28,6 @@ namespace Client.Game
             }
             else
             {
-                Debug.Log("Working");
                 var forward = transform.forward;
                 forward.y = 0f;
 

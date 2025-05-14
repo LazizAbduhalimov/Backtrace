@@ -7,6 +7,7 @@ using UnityEngine.Serialization;
 
 public class RewindManager : MonoBehaviour
 {
+    public bool GameOver;
     public int FramePerStepRewind => 2;
     public float RecordDuration => _recordDuration; 
     public static RewindManager Instance { get; private set; }
@@ -28,7 +29,7 @@ public class RewindManager : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(Time.timeScale);
+        if (GameOver) return;
         if (Input.GetKeyDown(KeyCode.R))
             StartRewind();
         else if (Input.GetKeyUp(KeyCode.R))
