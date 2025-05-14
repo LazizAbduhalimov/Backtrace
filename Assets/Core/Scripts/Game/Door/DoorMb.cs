@@ -24,8 +24,8 @@ namespace Client
         public void SwitchDoor()
         {
             _isOpen = !_isOpen;
-            if (_isOpen) Open();
-            else Close();
+            if (IsOpen()) Close();
+            else Open();
         }
         
         public void Open()
@@ -42,6 +42,11 @@ namespace Client
             _tween = Tween.PositionAtSpeed(
                 transform, _defaultPosition, 5, Ease.OutSine);
             Debug.Log($"Closing door {name}");
+        }
+
+        public bool IsOpen()
+        {
+            return transform.position != _defaultPosition;
         }
     }
 }

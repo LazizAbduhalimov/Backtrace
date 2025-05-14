@@ -1,12 +1,7 @@
-using System.Collections.Generic;
-using Client.Game;
 using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.Serialization;
 
 namespace Client
 {
-    [RequireComponent(typeof(TransformSwayer))]
     public class DecorRewindBody : RewindBodyBase
     {
         public Behaviour[] Components;
@@ -14,6 +9,7 @@ namespace Client
         public override void StartRewind()
         {
             base.StartRewind();
+            if (Components == null) return;
             foreach (var component in Components)
             {
                 component.enabled = false;
@@ -23,6 +19,7 @@ namespace Client
         public override void StopRewind()
         {
             base.StopRewind();
+            if (Components == null) return;
             foreach (var component in Components)
             {
                 component.enabled = true;
