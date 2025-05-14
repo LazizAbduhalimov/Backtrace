@@ -67,6 +67,7 @@ namespace Client
             _agent.isStopped = false;
             _dumbAI.Target = null;
             _dumbAI.State = AIState.Patrol;
+            _agent.SetDestination(_dumbAI.Path[_dumbAI.Index].Target.position);
             Debug.Log("Stopped rewinding");
         }
     }

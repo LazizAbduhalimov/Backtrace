@@ -52,8 +52,11 @@ public class RewindManager : MonoBehaviour
     {
         if (IsRewinding) return;
         IsRewinding = true;
+        SetTimeScale(1f);
         foreach (var rewindBodyBase in _trackedObjects)
+        {
             rewindBodyBase.StartRewind();
+        }
     }
 
     public void StopRewind()
@@ -67,7 +70,7 @@ public class RewindManager : MonoBehaviour
         SetTimeScale(0f);
     }
 
-    private void SetTimeScale(float timescale)
+    public void SetTimeScale(float timescale)
     {
         Time.timeScale = timescale;
     }
