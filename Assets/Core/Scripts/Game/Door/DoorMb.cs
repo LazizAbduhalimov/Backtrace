@@ -16,7 +16,7 @@ namespace Client
             _defaultPosition = transform.position;
             if (_isOpen)
             {
-                Open();
+                Open(false);
                 _tween?.Complete();
             }
         }
@@ -28,16 +28,20 @@ namespace Client
             else Open();
         }
         
-        public void Open()
+        public void Open(bool useSound = true)
         {
+            if (useSound)
+                SoundManager.Instance.PlayFX(AllSfxSounds.Door);
             _tween?.Stop();
             _tween = Tween.PositionAtSpeed(
                 transform, _defaultPosition.AddY(-2.25f), 5, Ease.OutSine);
             Debug.Log($"Opening door {name}");
         }
 
-        public void Close()
+        public void Close(bool useSound = true)
         {
+            if (useSound)
+                SoundManager.Instance.PlayFX(AllSfxSounds.Door);
             _tween?.Stop();
             _tween = Tween.PositionAtSpeed(
                 transform, _defaultPosition, 5, Ease.OutSine);
