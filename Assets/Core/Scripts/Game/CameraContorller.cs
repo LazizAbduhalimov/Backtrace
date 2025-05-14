@@ -5,7 +5,7 @@ public class SmoothCameraMove : MonoBehaviour
     public float moveSpeed = 5f;
     public float smoothTime = 0.1f;
 
-    Vector3 targetPosition;
+    public Vector3 targetPosition;
     Vector3 velocity = Vector3.zero;
 
     // private Vector2 limitX;
@@ -18,6 +18,11 @@ public class SmoothCameraMove : MonoBehaviour
 
     void Update()
     {
+        if (RewindManager.Instance.IsRewinding)
+        {
+            targetPosition = transform.position;
+            return;
+        }
         var input = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
         if (input.sqrMagnitude > 0f)
         {

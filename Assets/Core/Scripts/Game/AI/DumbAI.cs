@@ -48,8 +48,14 @@ namespace Client.Game.AI
 
         private void Patrol()
         {
-            if (Index >= Path.Count && _dissapearWhenDoneParoling)
-                gameObject.SetActive(false);
+            if (Index >= Path.Count - 1 && _dissapearWhenDoneParoling)
+            {
+                var dist = Vector3.Distance(transform.position.WithY(0), Path[Index].Target.position);
+                Debug.DrawRay(transform.position.WithY(0), Vector3.up, Color.red);
+                Debug.DrawRay(Path[Index].Target.position.WithY(0), Vector3.up, Color.blue);
+                if (dist < 0.01f)
+                    gameObject.SetActive(false);
+            }
             if (Path.Count < 1 || Index >= Path.Count) return;
             var path = Path[Index];
             
@@ -58,7 +64,6 @@ namespace Client.Game.AI
             Debug.DrawRay(path.Target.position, Vector3.up, Color.blue);
             if (distance < 0.01f)
                 PassedTime += Time.deltaTime;
-            // else 
             
             if (PassedTime >= path.TimeToNextPoint)
             {
@@ -67,6 +72,7 @@ namespace Client.Game.AI
                 PassedTime -= path.TimeToNextPoint;
                 Index++;
                 _navMeshAgent.SetDestination(Path[Index].Target.position);
+                Debug.Log($"last target: {Path[Index].Target.name}");
             }
         }
     }

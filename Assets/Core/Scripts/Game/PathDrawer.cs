@@ -19,6 +19,11 @@ namespace Client.Game
 
         private void Update()
         {
+            if (RewindManager.Instance.IsRewinding || RewindManager.Instance.IsGamePaused())
+            {
+                LineRenderer.positionCount = 0;
+                return;
+            }
             var ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
             DrawPath(_lastHitPosition);
             if (Agent.IsMoving() && !Input.GetMouseButtonDown(0)) return;

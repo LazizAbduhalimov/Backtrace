@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Client.Game;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -32,7 +33,7 @@ public class RewindManager : MonoBehaviour
             StartRewind();
         else if (Input.GetKeyUp(KeyCode.R))
             StopRewind();
-        else if (!IsRewinding &&  Input.anyKeyDown)
+        else if (!IsRewinding &&  Input.anyKeyDown && !Player.IsDead)
             SetTimeScale(1f);
     }
 
