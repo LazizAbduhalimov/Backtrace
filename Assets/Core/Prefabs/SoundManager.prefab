@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2278668822069927498
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7512465374829756946}
+  - component: {fileID: 3273246566559302835}
+  - component: {fileID: 1171890104066474151}
+  m_Layer: 0
+  m_Name: SoundManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7512465374829756946
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2278668822069927498}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3273246566559302835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2278668822069927498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4405f466106440ac920ce73d3bfffafc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Musics: []
+  FXSounds: []
+  UISounds: []
+--- !u!114 &1171890104066474151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2278668822069927498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5e1c05f972a107419bf2aa82c476551, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MusicGroup:
+    Data:
+    - Name: MainTheme
+      AudioClip: {fileID: 8300000, guid: 36996d32c79474b4b8a673979363a771, type: 3}
+      PlayOnAwake: 1
+      Loop: 1
+      InstanceNumber: 0
+    MixerGroup: {fileID: 24300002, guid: 55d1af9081c1fcc429687705a254ca8f, type: 2}
+  FxGroup:
+    Data: []
+    MixerGroup: {fileID: 24300002, guid: 55d1af9081c1fcc429687705a254ca8f, type: 2}
+  UiGroup:
+    Data: []
+    MixerGroup: {fileID: 24300002, guid: 55d1af9081c1fcc429687705a254ca8f, type: 2}
+  _destroyComponentAfterInit: 0
+  _soundManager: {fileID: 3273246566559302835}

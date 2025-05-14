@@ -36,10 +36,8 @@ namespace Client.Game
                         agentPath.status == NavMeshPathStatus.PathComplete)
                     {
                         var destination = Vector3Int.RoundToInt(hit.point);
-                        if (_agent.destination != destination)
-                            SoundManager.Instance.PlayFX(AllSfxSounds.Move);
+                        SoundManager.Instance.PlayFX(AllSfxSounds.Move);
                         _agent.SetDestination(destination);
-                        // SoundManager.Instance.PlayFX(AllSfxSounds);
                         return;
                     }
                     Debug.Log("No Path");

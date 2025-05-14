@@ -7,6 +7,7 @@ namespace Client.Game
     {
         public NavMeshAgent Agent;
         public LineRenderer LineRenderer;
+        public Transform Pointer;
 
         private Camera _mainCamera;
         private Vector3 _lastHitPosition; 
@@ -21,7 +22,7 @@ namespace Client.Game
         {
             if (RewindManager.Instance.IsRewinding || RewindManager.Instance.IsGamePaused())
             {
-                LineRenderer.positionCount = 0;
+                TurnOff();
                 return;
             }
             var ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
@@ -34,8 +35,14 @@ namespace Client.Game
             }
             else if (!Agent.IsMoving())
             {
-                LineRenderer.positionCount = 0;
+                TurnOff();
             }
+        }
+
+        private void TurnOff()
+        {
+            LineRenderer.positionCount = 0;
+            Pointer.gameObject.SetActive(false);
         }
 
         private void DrawPath(Vector3 target)
@@ -43,9 +50,15 @@ namespace Client.Game
             var navPath = new NavMeshPath();
             if (!Agent.CalculatePath(target, navPath) || navPath.status != NavMeshPathStatus.PathComplete) return;
             LineRenderer.positionCount = navPath.corners.Length;
+            
             for (var i = 0; i < navPath.corners.Length; i++)
             {
                 LineRenderer.SetPosition(i, navPath.corners[i]);
+            }
+            if (LineRenderer.positionCount > 0)
+            {
+                Pointer.gameObject.SetActive(true);
+                Pointer.position = LineRenderer.GetPosition(LineRenderer.positionCount-1).AddY(0.05f);
             }
         }
     }
