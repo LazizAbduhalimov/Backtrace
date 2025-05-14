@@ -25,8 +25,22 @@ namespace Client.Game
                 if (_rotationSpeed > 0)
                     transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation,
                         Time.deltaTime * _rotationSpeed);
+            }
+            else
+            {
+                Debug.Log("Working");
+                var forward = transform.forward;
+                forward.y = 0f;
+
+                // Выбираем ближайшую ось (X или Z)
+                if (Mathf.Abs(forward.x) > Mathf.Abs(forward.z))
+                    forward = forward.x >= 0 ? Vector3.right : Vector3.left;
                 else
-                    transform.rotation = targetRotation;
+                    forward = forward.z >= 0 ? Vector3.forward : Vector3.back;
+
+                if (_rotationSpeed > 0)
+                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(forward),
+                    Time.deltaTime * _rotationSpeed);
             }
         }
     }

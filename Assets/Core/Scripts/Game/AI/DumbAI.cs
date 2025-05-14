@@ -71,6 +71,7 @@ namespace Client.Game.AI
                     path.ObjectToInteract.Switch();
                 PassedTime -= path.TimeToNextPoint;
                 Index++;
+                if (Path.Count <= Index ) return;
                 _navMeshAgent.SetDestination(Path[Index].Target.position);
                 Debug.Log($"last target: {Path[Index].Target.name}");
             }
