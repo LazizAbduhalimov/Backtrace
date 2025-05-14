@@ -2,11 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Client.Game;
+using PrimeTween;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 public class RewindManager : MonoBehaviour
 {
+    public AudioSource AudioSource;
+    public float PitchSpeed = 1.5f;
     public bool GameOver;
     public int FramePerStepRewind => 2;
     public float RecordDuration => _recordDuration; 
@@ -18,6 +21,9 @@ public class RewindManager : MonoBehaviour
     public bool IsRewinding { get; private set; }
 
     public int RewindLength => _trackedObjects.First().FramesLeft;
+
+    private Tween? _tween;
+    private bool _afterRewind;
 
     private void Awake()
     {
@@ -34,8 +40,11 @@ public class RewindManager : MonoBehaviour
             StartRewind();
         else if (Input.GetKeyUp(KeyCode.R))
             StopRewind();
-        else if (!IsRewinding &&  Input.anyKeyDown && !Player.IsDead)
+        else if (!IsRewinding && Input.anyKeyDown && !Player.IsDead)
+        {
             SetTimeScale(1f);
+            ChangePitch(1f);
+        }
     }
 
     public void Register(RewindBodyBase obj)
@@ -54,6 +63,7 @@ public class RewindManager : MonoBehaviour
     {
         if (IsRewinding) return;
         IsRewinding = true;
+        ChangePitch(2.5f);
         SetTimeScale(1f);
         foreach (var rewindBodyBase in _trackedObjects)
         {
@@ -61,11 +71,20 @@ public class RewindManager : MonoBehaviour
         }
     }
 
+    private void ChangePitch(float toPitch)
+    {
+        var fromPitch = AudioSource.pitch;
+        var duration = Mathf.Abs(toPitch - fromPitch) / PitchSpeed;
+        _tween?.Complete();
+        _tween = Tween.Custom(AudioSource.pitch, toPitch, 0.25f,
+            value => AudioSource.pitch = value, Ease.OutSine, useUnscaledTime: true);
+    }
+
     public void StopRewind()
     {
         if (!IsRewinding) return;
         IsRewinding = false;
-
+        ChangePitch(0.3f);
         foreach (var rewindBodyBase in _trackedObjects)
             rewindBodyBase.StopRewind();
         
