@@ -6,6 +6,7 @@ namespace Client.Game
     [RequireComponent(typeof(NavMeshAgent))]
     public class AgentController : MonoBehaviour
     {
+        public LayerMask LayerMask;
         public int Button = 0;
         private NavMeshAgent _agent;
         private Camera _mainCamera;
@@ -23,14 +24,8 @@ namespace Client.Game
             {
                 var ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
 
-                if (Physics.Raycast(ray, out var hit))
+                if (Physics.Raycast(ray, out var hit, int.MaxValue, LayerMask))
                 {
-                    var layerName = LayerMask.LayerToName(hit.transform.gameObject.layer);
-                    if (layerName != "Ground" && layerName != "Door")
-                    {
-                        Debug.Log("No Path");
-                        return;
-                    }
                     var agentPath = new NavMeshPath();
                     if (_agent.CalculatePath(Vector3Int.RoundToInt(hit.point), agentPath) && 
                         agentPath.status == NavMeshPathStatus.PathComplete)

@@ -5,6 +5,7 @@ namespace Client.Game
 {
     public class PathDrawer : MonoBehaviour
     {
+        public LayerMask LayerMask;
         public NavMeshAgent Agent;
         public LineRenderer LineRenderer;
         public Transform Pointer;
@@ -25,11 +26,11 @@ namespace Client.Game
                 TurnOff();
                 return;
             }
-            var ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
+            var ray =_mainCamera .ScreenPointToRay(Input.mousePosition);
             DrawPath(_lastHitPosition);
             if (Agent.IsMoving() && !Input.GetMouseButtonDown(0)) return;
             
-            if (Physics.Raycast(ray, out var hit))
+            if (Physics.Raycast(ray, out var hit, int.MaxValue, LayerMask))
             {
                 _lastHitPosition = Vector3Int.RoundToInt(hit.point);
             }

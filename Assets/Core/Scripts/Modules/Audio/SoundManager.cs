@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class SoundManager: MonoBehaviour
 {
@@ -11,22 +12,20 @@ public class SoundManager: MonoBehaviour
     [HideInInspector] public List<SoundGroup> FXSounds;
     [HideInInspector] public List<SoundGroup> UISounds;
 
-    private AudioSource _playingMusicSource;
+    [HideInInspector] public AudioSource PlayingMusicSource;
     
     public void Init()
     {
+        transform.parent = null;
         Musics = new List<SoundGroup>();
         FXSounds = new List<SoundGroup>();
         UISounds = new List<SoundGroup>();
         if (_instance == null)
         {
             _instance = this;
-            // DontDestroyOnLoad(this);
+            DontDestroyOnLoad(this);
             return;
         }
-#if DEBUG
-        Debug.LogError($"There is more than 1 AudioManger, {name} have been destroyed");    
-#endif
         Destroy(gameObject);
     }
     
@@ -51,13 +50,13 @@ public class SoundManager: MonoBehaviour
     public void RestartMusic()
     {
         StopMusic();
-        MarkAndPlayMusicSource(_playingMusicSource);
+        MarkAndPlayMusicSource(PlayingMusicSource);
     }
 
     public void StopMusic()
     {
-        if (_playingMusicSource != null && _playingMusicSource.isPlaying)
-            _playingMusicSource.Stop();
+        if (PlayingMusicSource != null && PlayingMusicSource.isPlaying)
+            PlayingMusicSource.Stop();
     }
 
     public void PlayFX(string fxName, Vector3? position = null)
@@ -103,8 +102,8 @@ public class SoundManager: MonoBehaviour
     private void MarkAndPlayMusicSource(AudioSource audioSource)
     {
         StopMusic();
-        _playingMusicSource = audioSource;
-        _playingMusicSource.Play();
+        PlayingMusicSource = audioSource;
+        PlayingMusicSource.Play();
     }
     
 }

@@ -8,7 +8,7 @@ using UnityEngine.Serialization;
 
 public class RewindManager : MonoBehaviour
 {
-    public AudioSource AudioSource;
+    private AudioSource _audioSource;
     public float PitchSpeed = 1.5f;
     public bool GameOver;
     public int FramePerStepRewind => 2;
@@ -27,6 +27,7 @@ public class RewindManager : MonoBehaviour
 
     private void Awake()
     {
+        _audioSource = GameObject.Find("MainTheme").GetComponentInChildren<AudioSource>();
         if (Instance != null && Instance != this)
             Destroy(gameObject);
         else
@@ -73,11 +74,11 @@ public class RewindManager : MonoBehaviour
 
     private void ChangePitch(float toPitch)
     {
-        var fromPitch = AudioSource.pitch;
+        var fromPitch = _audioSource.pitch;
         var duration = Mathf.Abs(toPitch - fromPitch) / PitchSpeed;
         _tween?.Complete();
-        _tween = Tween.Custom(AudioSource.pitch, toPitch, 0.25f,
-            value => AudioSource.pitch = value, Ease.OutSine, useUnscaledTime: true);
+        _tween = Tween.Custom(_audioSource.pitch, toPitch, 0.25f,
+            value => _audioSource.pitch = value, Ease.OutSine, useUnscaledTime: true);
     }
 
     public void StopRewind()

@@ -2150,6 +2150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d526053a297b4f05ab5d5f67f2d7d92c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Animator: {fileID: 0}
   IsRewinding: 0
   Components: []
 --- !u!23 &2021460318675909396 stripped

@@ -6,11 +6,13 @@ namespace Client.Game
 {
     public class NavMeshRebuilder : MonoBehaviour
     {
+        public bool RebuildAtStart;
         public NavMeshSurface NavMeshSurface;
 
         private void Awake()
         {
-            NavMeshSurface.BuildNavMesh();
+            if (RebuildAtStart)
+                NavMeshSurface.BuildNavMesh();
         }
     }
 }

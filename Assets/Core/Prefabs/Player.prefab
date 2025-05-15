@@ -96,6 +96,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7079d518974848e9b9426330385eeb94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LayerMask:
+    serializedVersion: 2
+    m_Bits: 1032
   Button: 0
 --- !u!114 &-4834567874892005179
 MonoBehaviour:
