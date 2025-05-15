@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class RewindBodyBase : MonoBehaviour
 {
+    public Animator Animator;
     public int FramesLeft => _frames.Count;
     private List<RewindBodyData> _frames = new();
     private int _maxFrames;
@@ -43,11 +44,42 @@ public class RewindBodyBase : MonoBehaviour
         if (_frames.Count >= _maxFrames)
             _frames.RemoveAt(0);
 
-        _frames.Add(new RewindBodyData
+        var rewindData = new RewindBodyData
         {
             Position = transform.position,
             Rotation = transform.rotation
-        });
+        };
+
+        if (Animator == null)
+        {
+            _frames.Add(rewindData);
+            return;
+        };
+        
+        var snapshot = new AnimatorSnapshot();
+        if (Animator.IsInTransition(0))
+        {
+            var transition = Animator.GetNextAnimatorStateInfo(0);
+            snapshot = new AnimatorSnapshot
+            {
+                stateHash = transition.fullPathHash,
+                normalizedTime = transition.normalizedTime,
+                isTransitioning = true
+            };
+        }
+        else 
+        {
+            var state = Animator.GetCurrentAnimatorStateInfo(0);
+            snapshot = new AnimatorSnapshot
+            {
+                stateHash = state.fullPathHash,
+                normalizedTime = state.normalizedTime,
+                isTransitioning = false
+            };
+        }
+
+        rewindData.AnimatorSnapshot = snapshot;
+        _frames.Add(rewindData);
     }
 
     protected void RewindStep()
@@ -57,7 +89,14 @@ public class RewindBodyBase : MonoBehaviour
             var frame = _frames[^1];
             transform.position = frame.Position;
             transform.rotation = frame.Rotation;
+            if (frame.AnimatorSnapshot.HasValue)
+            {
+                var snapshot = frame.AnimatorSnapshot.Value;
+                Animator.Play(snapshot.stateHash, 0, snapshot.normalizedTime);
+                Animator.Update(0f); // Принудительно применяем новое состояние сразу   
+            }
             _frames.RemoveAt(_frames.Count - 1);
+
         }
         else
         {
@@ -69,4 +108,12 @@ public class RewindBodyBase : MonoBehaviour
     public virtual void StartRewind() => IsRewinding = true;
 
     public virtual void StopRewind() => IsRewinding = false;
+}
+
+[System.Serializable]
+public struct AnimatorSnapshot
+{
+    public int stateHash;
+    public float normalizedTime;
+    public bool isTransitioning;
 }

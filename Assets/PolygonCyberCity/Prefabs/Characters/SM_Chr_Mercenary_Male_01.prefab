@@ -5,6 +5,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 1088283911453265293}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 8f53dfac52e7c934ba76e75fb8c542ea, type: 3}
@@ -60,12 +61,21 @@ PrefabInstance:
       value: SM_Chr_Attach_Earrings_Male_01
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8f53dfac52e7c934ba76e75fb8c542ea, type: 3}
+--- !u!4 &2869804850178007502 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8f53dfac52e7c934ba76e75fb8c542ea, type: 3}
+  m_PrefabInstance: {fileID: 2330930785389954597}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5153363170650138019
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -9146574396195815043, guid: 21e1340f0ec98c849822321ff3df8758, type: 3}
@@ -265,6 +275,18 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: 0cb44352831fc1a439a0ecff245686a4, type: 2}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -3990698397054048210, guid: 21e1340f0ec98c849822321ff3df8758, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2869804850178007502}
+    - targetCorrespondingSourceObject: {fileID: -3990698397054048210, guid: 21e1340f0ec98c849822321ff3df8758, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8124196666329698236}
+    - targetCorrespondingSourceObject: {fileID: -3990698397054048210, guid: 21e1340f0ec98c849822321ff3df8758, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7885988526650791114}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 21e1340f0ec98c849822321ff3df8758, type: 3}
 --- !u!4 &1088283911453265293 stripped
 Transform:
@@ -276,6 +298,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 1088283911453265293}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: af766fee05c00ef479a0e0e6115a3fb3, type: 3}
@@ -331,12 +354,21 @@ PrefabInstance:
       value: SM_Chr_Attach_Hair_08
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: af766fee05c00ef479a0e0e6115a3fb3, type: 3}
+--- !u!4 &7885988526650791114 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: af766fee05c00ef479a0e0e6115a3fb3, type: 3}
+  m_PrefabInstance: {fileID: 7708493185570239265}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8589570307961120855
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 1088283911453265293}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: c148d4b6bd384d4428c37429971f24d9, type: 3}
@@ -391,5 +423,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Chr_Attach_Mask_Male_01
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c148d4b6bd384d4428c37429971f24d9, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c148d4b6bd384d4428c37429971f24d9, type: 3}
+--- !u!4 &8124196666329698236 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: c148d4b6bd384d4428c37429971f24d9, type: 3}
+  m_PrefabInstance: {fileID: 8589570307961120855}
+  m_PrefabAsset: {fileID: 0}

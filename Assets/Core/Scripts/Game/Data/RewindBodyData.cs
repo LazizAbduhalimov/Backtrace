@@ -6,5 +6,6 @@ namespace Client.Game
     {
         public Vector3 Position;
         public Quaternion Rotation;
+        public AnimatorSnapshot? AnimatorSnapshot;
     }
 }
