@@ -20,22 +20,39 @@ namespace Client.Game
             _tween = Tween.Alpha(_loader, 0, _duration, Ease.InSine);
         }
 
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                ChangeSceneAnim(SceneManager.GetActiveScene().buildIndex);
+            }
+        }
+
         private void OnTriggerEnter(Collider other)
         {
             if (other.TryGetComponent<Player>(out var player))
             {
-                RewindManager.Instance.GameOver = true;
-                _tween?.Stop();
-                _tween = Tween.Alpha(_loader, 1f, _duration).OnComplete(ChangeScene);
+                var index = SceneManager.GetActiveScene().buildIndex + 1;
+                ChangeSceneAnim(index);
             }
         }
 
-        private void ChangeScene()
+        private void ChangeSceneAnim(int index)
         {
-            var index = SceneManager.GetActiveScene().buildIndex + 1;
+            RewindManager.Instance.GameOver = true;
+            _tween?.Stop();
+            _tween = Tween.Alpha(_loader, 1f, _duration, useUnscaledTime: true).OnComplete(() =>
+            {
+                ChangeScene(index);
+            });
+        }
+
+        private void ChangeScene(int index)
+        {
             if (SceneManager.sceneCountInBuildSettings <= index)
             {
-                Tween.Alpha(_thanks, 1f, _duration);
+                Tween.Alpha(_thanks, 1f, _duration, useUnscaledTime: true);
+                RewindManager.Instance.SetTimeScale(0f);
             }
             else
             {

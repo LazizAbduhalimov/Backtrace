@@ -33,6 +33,7 @@ namespace Client.Game
                     value => ColorGrading.saturation.value = value, useUnscaledTime: true);
                 _ui?.Complete();
                 _ui = Tween.Alpha(TextUI, 1, duration: 0.1f, useUnscaledTime: true);
+                SoundManager.Instance.PlayFX(AllSfxSounds.Dead);
             }
         }
 
@@ -52,7 +53,6 @@ namespace Client.Game
                 _tween?.Complete();
                 _tween = Tween.Custom(GreyAmount, 0, Duration,
                     value => ColorGrading.saturation.value = value, useUnscaledTime: true);
-                Debug.Log("UnKilled");
                 _ui?.Complete();
                 _ui = Tween.Alpha(TextUI, 0, duration: 0.1f, useUnscaledTime: false);
             }

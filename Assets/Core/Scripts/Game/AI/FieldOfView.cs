@@ -44,7 +44,11 @@ public class FieldOfView : MonoBehaviour
     private void AdaptColor()
     {
         var color = VisibleTargets.Count > 0 ? EngageColor : _defaultColor;
-        _meshRenderer.material.color = color;
+        if (_meshRenderer.material.color != color)
+        {
+            _meshRenderer.material.color = color;
+            SoundManager.Instance.PlayFX(AllSfxSounds.Detected);
+        }
     }
 
     private void FindVisibleTargets() {
