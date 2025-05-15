@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Client.Game;
 using UnityEngine;
@@ -9,6 +10,12 @@ public class RewindBodyBase : MonoBehaviour
     private List<RewindBodyData> _frames = new();
     private int _maxFrames;
     public bool IsRewinding;
+
+    private void OnValidate()
+    {
+        if (Animator == null)
+            Animator = GetComponentInChildren<Animator>();
+    }
 
     private void Start()
     {

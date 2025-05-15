@@ -32,7 +32,7 @@ namespace Client.Game
                         return;
                     }
                     var agentPath = new NavMeshPath();
-                    if (_agent.CalculatePath(hit.point, agentPath) && 
+                    if (_agent.CalculatePath(Vector3Int.RoundToInt(hit.point), agentPath) && 
                         agentPath.status == NavMeshPathStatus.PathComplete)
                     {
                         var destination = Vector3Int.RoundToInt(hit.point);
