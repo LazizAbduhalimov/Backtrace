@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using Client.Game;
-using Client.Game.AI;
+using Game;
+using Game.AI;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Client
+namespace Game
 {
     public class AIAgentRewindBody : RewindBodyBase
     {

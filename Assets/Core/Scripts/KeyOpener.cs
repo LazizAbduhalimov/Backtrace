@@ -1,8 +1,8 @@
 using System;
-using Client.Game;
+using Game;
 using UnityEngine;
 
-namespace Client
+namespace Game
 {
     public class KeyOpener : MonoBehaviour
     {

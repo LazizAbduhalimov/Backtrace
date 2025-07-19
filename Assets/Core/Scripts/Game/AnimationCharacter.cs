@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Client.Game
+namespace Game
 {
     public class AnimationCharacter : MonoBehaviour
     {

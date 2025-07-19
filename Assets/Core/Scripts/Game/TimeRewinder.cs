@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Client.Game
+namespace Game
 {
     public class TimeRewinder : MonoBehaviour
     {

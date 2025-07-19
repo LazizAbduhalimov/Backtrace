@@ -1,11 +1,11 @@
 using System;
-using Client.Game.AI;
+using Game.AI;
 using PrimeTween;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 
-namespace Client.Game
+namespace Game
 {
     public class Player : MonoBehaviour
     {

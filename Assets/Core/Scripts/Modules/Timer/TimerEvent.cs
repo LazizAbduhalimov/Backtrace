@@ -1,6 +1,6 @@
 using System;
 
-namespace Client {
+namespace Game {
     public struct TimerEvent
     {
         public float Time;

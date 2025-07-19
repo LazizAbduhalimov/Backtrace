@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Client.Game;
+using Game;
 using UnityEngine;
 
 public class RewindBodyBase : MonoBehaviour

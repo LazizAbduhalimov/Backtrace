@@ -1,5 +1,5 @@
 using System;
-using Client;
+using Game;
 using Leopotam.EcsLite;
 using UnityEngine;
 

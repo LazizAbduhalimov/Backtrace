@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Client.Game
+namespace Game
 {
     public class DoorKeyMb : MonoBehaviour
     {

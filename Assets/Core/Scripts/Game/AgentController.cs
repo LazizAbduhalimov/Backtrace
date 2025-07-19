@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Client.Game
+namespace Game
 {
     [RequireComponent(typeof(NavMeshAgent))]
     public class AgentController : MonoBehaviour

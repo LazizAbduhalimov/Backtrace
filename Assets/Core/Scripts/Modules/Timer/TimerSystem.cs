@@ -2,7 +2,7 @@ using Leopotam.EcsLite;
 using UnityEngine;
 using Leopotam.EcsLite.Di;
 
-namespace Client {
+namespace Game {
     public sealed class TimerSystem : IEcsRunSystem
     {
         private readonly EcsCustomInject<Postponer> _postponer;

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Client
+namespace Game
 {
     public class Loader : MonoBehaviour
     {

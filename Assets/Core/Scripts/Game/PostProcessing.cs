@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 
-namespace Client.Game
+namespace Game
 {
     public class PostProcessing : MonoBehaviour
     {

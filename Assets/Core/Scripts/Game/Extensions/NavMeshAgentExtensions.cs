@@ -1,6 +1,6 @@
 using UnityEngine.AI;
 
-namespace Client.Game
+namespace Game
 {
     public static class NavMeshAgentExtensions
     {

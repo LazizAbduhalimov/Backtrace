@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Client.Game
+namespace Game
 {
     public struct RewindBodyData
     {

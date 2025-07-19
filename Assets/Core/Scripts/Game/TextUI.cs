@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Client.Game
+namespace Game
 {
     public class TextUI : MonoBehaviour
     {

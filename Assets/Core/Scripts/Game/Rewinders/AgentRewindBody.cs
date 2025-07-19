@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using Client.Game;
+using Game;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Client
+namespace Game
 {
     public class AgentRewindBody : RewindBodyBase
     {

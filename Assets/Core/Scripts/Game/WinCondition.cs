@@ -3,7 +3,7 @@ using PrimeTween;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Client.Game
+namespace Game
 {
     public class WinCondition : MonoBehaviour
     {

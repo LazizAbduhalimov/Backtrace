@@ -2,7 +2,7 @@ using System;
 using PrimeTween;
 using UnityEngine;
 
-namespace Client
+namespace Game
 {
     public class DoorMb : MonoBehaviour
     {

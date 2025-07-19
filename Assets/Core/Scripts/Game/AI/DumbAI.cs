@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Serialization;
 
-namespace Client.Game.AI
+namespace Game.AI
 {
     [RequireComponent(typeof(NavMeshAgent))]
     public class DumbAI : MonoBehaviour

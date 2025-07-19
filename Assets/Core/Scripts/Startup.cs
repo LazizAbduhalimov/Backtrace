@@ -2,7 +2,7 @@ using Leopotam.EcsLite;
 using UnityEngine;
 using AB_Utility.FromSceneToEntityConverter;
 
-namespace Client {
+namespace Game {
     public sealed class Startup : MonoBehaviour 
     {
         private EcsWorld _world;        

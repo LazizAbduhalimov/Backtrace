@@ -2,7 +2,7 @@ using System;
 using Leopotam.EcsLite;
 using UnityEngine;
 
-namespace Client
+namespace Game
 {
     public static class CommonUtilities
     {

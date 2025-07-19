@@ -2,7 +2,7 @@ using System;
 using Unity.AI.Navigation;
 using UnityEngine;
 
-namespace Client.Game
+namespace Game
 {
     public class NavMeshRebuilder : MonoBehaviour
     {

@@ -1,7 +1,7 @@
 using System;
 using Leopotam.EcsLite;
 
-namespace Client
+namespace Game
 {
     public class Postponer
     {
