@@ -88,6 +88,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1111138197497616774, guid: f3cc7501fee595f41ae321234de86210, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1709171263767878079, guid: f3cc7501fee595f41ae321234de86210, type: 3}
       propertyPath: m_Name
       value: HowToOpenDoor Variant
