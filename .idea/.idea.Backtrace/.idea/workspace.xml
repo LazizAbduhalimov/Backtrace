@@ -5,24 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cc4646f9-9984-4630-87a6-cfbd18783d3f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Core/Scripts/Game/Settings.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Core/Scripts/Game/Settings/Settings.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Core/Scripts/Game/Settings/Settings.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Backtrace/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Backtrace/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Core/Assets/Images/icon.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Core/Assets/Images/icon.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Core/Assets/Materials/Doors/door_blue.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Core/Assets/Materials/Doors/door_blue.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Core/Assets/Materials/Doors/door_end.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Core/Assets/Materials/Doors/door_end.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Core/Assets/Materials/Doors/door_green.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Core/Assets/Materials/Doors/door_green.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Core/Assets/Materials/Doors/door_red.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Core/Assets/Materials/Doors/door_red.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Core/Assets/Materials/Doors/door_violet.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Core/Assets/Materials/Doors/door_violet.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Core/Assets/Materials/Doors/door_yellow.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Core/Assets/Materials/Doors/door_yellow.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Core/Assets/Materials/Wall.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Core/Assets/Materials/Wall.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Core/Assets/Materials/Wall_opaque.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Core/Assets/Materials/Wall_opaque.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Core/Prefabs/Settings.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Core/Prefabs/Settings.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/PluginYourGames/Resources/SettingsYG2.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/PluginYourGames/Resources/SettingsYG2.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Core/Scripts/Game/Settings/Settings.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Core/Scripts/Game/Settings/Settings.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/PluginYourGames/Editor/ModulesListYG2.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/PluginYourGames/Editor/ModulesListYG2.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/TextMesh Pro/Examples &amp; Extras/Resources/Fonts &amp; Materials/Roboto-Bold SDF.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/TextMesh Pro/Examples &amp; Extras/Resources/Fonts &amp; Materials/Roboto-Bold SDF.asset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/TextMesh Pro/Resources/Fonts &amp; Materials/LiberationSans SDF - Fallback.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/TextMesh Pro/Resources/Fonts &amp; Materials/LiberationSans SDF - Fallback.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/TextMesh Pro/Resources/Fonts &amp; Materials/LiberationSans SDF.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/TextMesh Pro/Resources/Fonts &amp; Materials/LiberationSans SDF.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -133,6 +122,7 @@
       <workItem from="1752957326755" duration="638000" />
       <workItem from="1753396345533" duration="2541000" />
       <workItem from="1753400733168" duration="74000" />
+      <workItem from="1753438370619" duration="210000" />
     </task>
     <servers />
   </component>
