@@ -24,6 +24,7 @@ namespace Game
         public void SwitchDoor()
         {
             _isOpen = !_isOpen;
+            _tween?.Complete();
             if (IsOpen()) Close();
             else Open();
         }
