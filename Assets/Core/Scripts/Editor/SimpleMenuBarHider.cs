@@ -9,6 +9,7 @@ namespace EditorUtils
     {
         private static IntPtr _unityWindowHandle = IntPtr.Zero;
         private static bool _isMenuBarHidden = false;
+        private static bool _shouldMonitorMenuBar = false;
 
         static MenuBarHider()
         {
@@ -17,6 +18,7 @@ namespace EditorUtils
             {
                 var settings = EditorUISettings.Instance;
                 settings.SaveSettings();
+                StopMenuBarMonitoring();
             };
         }
 
@@ -26,10 +28,58 @@ namespace EditorUtils
             var settings = EditorUISettings.Instance;
             settings.LoadSettings();
             
-            if (settings.hideMenuBar) HideMenuBar();
+            if (settings.hideMenuBar) 
+            {
+                HideMenuBar();
+                StartMenuBarMonitoring();
+            }
             if (settings.hideTitleBar) HideTitleBar();
             if (settings.showWindowControls) WindowControlsOverlay.ShowControls();
             if (settings.hideStatusBar) StatusBarHider.HideStatusBar();
+        }
+        
+        private static void StartMenuBarMonitoring()
+        {
+            if (!_shouldMonitorMenuBar)
+            {
+                _shouldMonitorMenuBar = true;
+                EditorApplication.update += MonitorMenuBarState;
+                Debug.Log("Started menu bar monitoring");
+            }
+        }
+        
+        private static void StopMenuBarMonitoring()
+        {
+            if (_shouldMonitorMenuBar)
+            {
+                _shouldMonitorMenuBar = false;
+                EditorApplication.update -= MonitorMenuBarState;
+                Debug.Log("Stopped menu bar monitoring");
+            }
+        }
+        
+        private static void MonitorMenuBarState()
+        {
+            if (!_shouldMonitorMenuBar || !_isMenuBarHidden) return;
+            
+            try
+            {
+                if (_unityWindowHandle != IntPtr.Zero)
+                {
+                    var currentMenu = GetMenu(_unityWindowHandle);
+                    if (currentMenu != IntPtr.Zero)
+                    {
+                        // Меню бар появился снова - скрываем его
+                        Debug.Log("Menu bar reappeared, hiding it again");
+                        SetMenu(_unityWindowHandle, IntPtr.Zero);
+                        DrawMenuBar(_unityWindowHandle); // Принудительная перерисовка
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"Error during menu bar monitoring: {e.Message}");
+            }
         }
 
         private static IntPtr _originalMenu = IntPtr.Zero;
@@ -50,6 +100,12 @@ namespace EditorUtils
                         SetMenu(_unityWindowHandle, IntPtr.Zero);
                         DrawMenuBar(_unityWindowHandle);
                         _isMenuBarHidden = true;
+                        StartMenuBarMonitoring(); // Начинаем мониторинг
+                        Debug.Log("Menu bar hidden and monitoring started");
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Menu bar is already hidden or not found");
                     }
                 }
             }
@@ -63,6 +119,8 @@ namespace EditorUtils
         {
             try
             {
+                StopMenuBarMonitoring(); // Останавливаем мониторинг
+                
                 if (_unityWindowHandle != IntPtr.Zero)
                 {
                     if (_originalMenu != IntPtr.Zero)
@@ -80,6 +138,7 @@ namespace EditorUtils
                     UpdateWindow(_unityWindowHandle);
                     
                     _isMenuBarHidden = false;
+                    Debug.Log("Menu bar restored and monitoring stopped");
                 }
             }
             catch (Exception e)

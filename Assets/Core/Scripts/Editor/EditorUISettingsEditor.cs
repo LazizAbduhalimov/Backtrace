@@ -84,7 +84,7 @@ namespace EditorUtils
                 {
                     MenuBarHider.HideTitleBar();
                     MenuBarHider.ShowTitleBar();
-                }
+                }   
             }
         }
     }
