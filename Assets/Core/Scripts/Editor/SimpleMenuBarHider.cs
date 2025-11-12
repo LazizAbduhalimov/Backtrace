@@ -28,6 +28,8 @@ namespace EditorUtils
             
             if (settings.hideMenuBar) HideMenuBar();
             if (settings.hideTitleBar) HideTitleBar();
+            if (settings.showWindowControls) WindowControlsOverlay.ShowControls();
+            if (settings.hideStatusBar) StatusBarHider.HideStatusBar();
         }
 
         private static IntPtr _originalMenu = IntPtr.Zero;

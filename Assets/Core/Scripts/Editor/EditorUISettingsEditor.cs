@@ -12,7 +12,9 @@ namespace EditorUtils
             
             bool prevHideTitleBar = settings.hideTitleBar;
             bool prevHideMenuBar = settings.hideMenuBar;
-            
+            bool prevShowWindowControls = settings.showWindowControls;
+            bool prevHideStatusBar = settings.hideStatusBar;
+
             DrawDefaultInspector();
             
             if (prevHideTitleBar != settings.hideTitleBar)
@@ -42,6 +44,46 @@ namespace EditorUtils
                 {
                     Debug.Log("Menu Bar checkbox unchecked - showing menu bar");
                     MenuBarHider.ShowMenuBar();
+                }
+            }
+            
+            if (prevShowWindowControls != settings.showWindowControls)
+            {
+                settings.SaveSettings();
+                if (settings.showWindowControls)
+                {
+                    Debug.Log("Window Controls checkbox checked - showing controls");
+                    WindowControlsOverlay.ShowControls();
+                }
+                else
+                {
+                    Debug.Log("Window Controls checkbox unchecked - hiding controls");
+                    WindowControlsOverlay.HideControls();
+                }
+            }
+            
+            if (prevHideStatusBar != settings.hideStatusBar)
+            {
+                settings.SaveSettings();
+                if (settings.hideStatusBar)
+                {
+                    Debug.Log("Status Bar checkbox checked - hiding status bar");
+                    StatusBarHider.HideStatusBar();
+                }
+                else
+                {
+                    Debug.Log("Status Bar checkbox unchecked - showing status bar");
+                    StatusBarHider.ShowStatusBar();
+                }
+                if (settings.hideTitleBar)
+                {
+                    MenuBarHider.ShowTitleBar();
+                    MenuBarHider.HideTitleBar();
+                }
+                else
+                {
+                    MenuBarHider.HideTitleBar();
+                    MenuBarHider.ShowTitleBar();
                 }
             }
         }
