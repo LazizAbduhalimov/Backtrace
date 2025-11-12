@@ -19,6 +19,9 @@ namespace EditorUtils
         [Tooltip("Show MenuBar button in toolbar to access all Unity menus")]
         public bool showMenuBar = true;
         
+        [Tooltip("Enable dragging Unity window by clicking and dragging toolbar area")]
+        public bool enableWindowDrag = true;
+        
         [Header("Status Bar")]
         [Tooltip("Hide Unity status bar at the bottom")]
         public bool hideStatusBar = false;
@@ -31,6 +34,7 @@ namespace EditorUtils
         private string ShowWindowControlsEditorPrefsKey => "EditorUISettings_ShowWindowControls";
         private string ShowMenuBarButtonEditorPrefsKey => "EditorUISettings_ShowMenuBarButton";
         private string HideStatusBarEditorPrefsKey => "EditorUISettings_HideStatusBar";
+        private string EnableWindowDragEditorPrefsKey => "EditorUISettings_EnableWindowDrag";
 
         public void SaveSettings()
         {
@@ -39,6 +43,7 @@ namespace EditorUtils
             EditorPrefs.SetBool(ShowWindowControlsEditorPrefsKey, showWindowControls);
             EditorPrefs.SetBool(ShowMenuBarButtonEditorPrefsKey, showMenuBar);
             EditorPrefs.SetBool(HideStatusBarEditorPrefsKey, hideStatusBar);
+            EditorPrefs.SetBool(EnableWindowDragEditorPrefsKey, enableWindowDrag);
         }
 
         public void LoadSettings()
@@ -48,6 +53,7 @@ namespace EditorUtils
             showWindowControls = EditorPrefs.GetBool(ShowWindowControlsEditorPrefsKey, false);
             showMenuBar = EditorPrefs.GetBool(ShowMenuBarButtonEditorPrefsKey, true);
             hideStatusBar = EditorPrefs.GetBool(HideStatusBarEditorPrefsKey, false);
+            enableWindowDrag = EditorPrefs.GetBool(EnableWindowDragEditorPrefsKey, true);
         }
 
         private static EditorUISettings CreateOrLoadSettings()

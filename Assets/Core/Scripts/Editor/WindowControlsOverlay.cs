@@ -13,9 +13,20 @@ namespace EditorUtils
     public static class WindowControlsOverlay
     {
         private const string ContainerName = "WindowControlsContainer";
+        private const string DragAreaName = "DragArea";
         private static bool _attempted;
         private static bool _isVisible = false;
         private static IntPtr _unityWindowHandle = IntPtr.Zero;
+        
+        // Windows API для перетаскивания окна
+        [DllImport("user32.dll")]
+        private static extern bool ReleaseCapture();
+        
+        [DllImport("user32.dll", EntryPoint = "SendMessage")]
+        private static extern IntPtr SendMessageForDrag(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+        
+        private const uint WM_NCLBUTTONDOWN = 0xA1;
+        private const uint HTCAPTION = 0x2;
         
         // Кеш для меню элементов
         private static List<string> _cachedMenuItems = null;
@@ -90,8 +101,13 @@ namespace EditorUtils
                 RemoveMenuBarButtonFromToolbar();
             }
             
-            // Отключаем обновление только если оба компонента отключены
-            if (!settings.showWindowControls && !settings.showMenuBar)
+            if (!settings.enableWindowDrag)
+            {
+                RemoveDragAreaFromToolbar();
+            }
+            
+            // Отключаем обновление только если все компоненты отключены
+            if (!settings.showWindowControls && !settings.showMenuBar && !settings.enableWindowDrag)
             {
                 EditorApplication.update -= TryInstall;
             }
@@ -134,23 +150,37 @@ namespace EditorUtils
             RemoveWindowControlsFromToolbar();
         }
         
+        public static void ShowDragArea()
+        {
+            // Перезапускаем установку элементов toolbar
+            _attempted = false;
+            EditorApplication.update += TryInstall;
+        }
+        
+        public static void HideDragArea()
+        {
+            RemoveDragAreaFromToolbar();
+        }
+        
         private static void TryInstall()
         {
             if (_attempted) return;
 
-            var settings = EditorUISettings.Instance;
-            if (!settings.showWindowControls && !settings.showMenuBar) return;
+            try
+            {
+                var settings = EditorUISettings.Instance;
+                if (settings == null || (!settings.showWindowControls && !settings.showMenuBar && !settings.enableWindowDrag)) return;
 
-            var toolbarType = typeof(UnityEditor.Editor).Assembly.GetType("UnityEditor.Toolbar");
-            if (toolbarType == null) return;
+                var toolbarType = typeof(UnityEditor.Editor).Assembly.GetType("UnityEditor.Toolbar");
+                if (toolbarType == null) return;
 
-            var toolbars = Resources.FindObjectsOfTypeAll(toolbarType);
-            if (toolbars == null || toolbars.Length == 0) return;
+                var toolbars = Resources.FindObjectsOfTypeAll(toolbarType);
+                if (toolbars == null || toolbars.Length == 0) return;
 
-            var toolbar = toolbars[0];
-            var rootField = toolbarType.GetField("m_Root", BindingFlags.NonPublic | BindingFlags.Instance);
-            var root = rootField?.GetValue(toolbar) as VisualElement;
-            if (root == null) return;
+                var toolbar = toolbars[0];
+                var rootField = toolbarType.GetField("m_Root", BindingFlags.NonPublic | BindingFlags.Instance);
+                var root = rootField?.GetValue(toolbar) as VisualElement;
+                if (root == null) return;
 
             // Ищем левую зону для кнопки MenuBar
             var leftZone = root.Q("ToolbarZoneLeftAlign") ?? root.Q("ToolbarZoneLeftAlign", "ToolbarZone");
@@ -188,6 +218,9 @@ namespace EditorUtils
                 var menuBarButton = CreateMenuBarButton();
                 leftZone.Add(menuBarButton);
             }
+
+            // Создаем область для перетаскивания в центральной части toolbar
+            CreateDragArea(root);
 
             // Создаем контейнер для кнопок управления окном только если включен showWindowControls
             if (settings.showWindowControls && rightZone != null)
@@ -228,6 +261,13 @@ namespace EditorUtils
 
             _attempted = true;
             EditorApplication.update -= TryInstall;
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogWarning($"TryInstall error: {e.Message}");
+                _attempted = true;
+                EditorApplication.update -= TryInstall;
+            }
         }
         
         private static Button CreateWindowButton(string text, string tooltip, System.Action action, Color? accentColor = null)
@@ -340,6 +380,77 @@ namespace EditorUtils
             });
             
             return menuBarButton;
+        }
+        
+        private static void CreateDragArea(VisualElement root)
+        {
+            try
+            {
+                var settings = EditorUISettings.Instance;
+                if (settings == null || !settings.enableWindowDrag) return;
+                
+                // Проверяем что обработчик еще не добавлен
+                if (root == null || root.Q(DragAreaName) != null) return;
+                
+                // Создаем невидимый маркер что обработчик добавлен
+                var marker = new VisualElement()
+                {
+                    name = DragAreaName,
+                    style = {
+                        position = Position.Absolute,
+                        width = 0,
+                        height = 0,
+                        opacity = 0
+                    }
+                };
+                root.Add(marker);
+                
+                // Добавляем обработчик к root toolbar
+                root.RegisterCallback<MouseDownEvent>((evt) => {
+                    try
+                    {
+                        // Проверяем что клик не по кнопке или другому интерактивному элементу
+                        var target = evt.target as VisualElement;
+                        if (target != null && IsEmptyToolbarArea(target, root))
+                        {
+                            if (evt.button == 0) // Левая кнопка мыши
+                            {
+                                StartWindowDrag();
+                                evt.StopPropagation();
+                            }
+                        }
+                    }
+                    catch (System.Exception e)
+                    {
+                        Debug.LogWarning($"Drag handler error: {e.Message}");
+                    }
+                });
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogWarning($"CreateDragArea error: {e.Message}");
+            }
+        }
+        
+        private static bool IsEmptyToolbarArea(VisualElement target, VisualElement root)
+        {
+            if (target == null || root == null) return false;
+            
+            // Проверяем что это не кнопка, не поле ввода и не другой интерактивный элемент
+            if (target is Button || target is TextField || target is Toggle || 
+                target.ClassListContains("unity-button") ||
+                target.ClassListContains("unity-toolbar-button") ||
+                (!string.IsNullOrEmpty(target.name) && target.name.Contains("Button")) ||
+                (!string.IsNullOrEmpty(target.name) && target.name.Contains("Field")))
+            {
+                return false;
+            }
+            
+            // Проверяем что это root или пустая зона
+            return target == root || 
+                   (!string.IsNullOrEmpty(target.name) && target.name.Contains("Zone")) || 
+                   (!string.IsNullOrEmpty(target.name) && target.name.Contains("Toolbar")) ||
+                   string.IsNullOrEmpty(target.name);
         }
         
         private static void ShowMenuBarDropdown(VisualElement button = null)
@@ -751,6 +862,34 @@ namespace EditorUtils
             }
         }
         
+        private static void RemoveDragAreaFromToolbar()
+        {
+            try
+            {
+                var toolbarType = typeof(UnityEditor.Editor).Assembly.GetType("UnityEditor.Toolbar");
+                if (toolbarType == null) return;
+
+                var toolbars = Resources.FindObjectsOfTypeAll(toolbarType);
+                if (toolbars == null || toolbars.Length == 0) return;
+
+                var toolbar = toolbars[0];
+                var rootField = toolbarType.GetField("m_Root", BindingFlags.NonPublic | BindingFlags.Instance);
+                var root = rootField?.GetValue(toolbar) as VisualElement;
+                if (root == null) return;
+
+                // Убираем обработчик событий с root элемента
+                if (root.userData != null && root.userData.Equals("drag_handler_added"))
+                {
+                    // Создаем новый root без обработчиков (Unity не дает прямого способа удалить обработчики)
+                    root.userData = null;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"Failed to remove drag area from toolbar: {e.Message}");
+            }
+        }
+        
         private static void MinimizeWindow()
         {
             try
@@ -836,6 +975,26 @@ namespace EditorUtils
             }
             
             return false;
+        }
+        
+        private static void StartWindowDrag()
+        {
+            try
+            {
+                if (_unityWindowHandle == IntPtr.Zero)
+                    _unityWindowHandle = GetUnityMainWindow();
+                    
+                if (_unityWindowHandle != IntPtr.Zero)
+                {
+                    // Освобождаем захват мыши и отправляем сообщение о перетаскивании
+                    ReleaseCapture();
+                    SendMessageForDrag(_unityWindowHandle, WM_NCLBUTTONDOWN, (IntPtr)HTCAPTION, IntPtr.Zero);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"Failed to start window drag: {e.Message}");
+            }
         }
         
         private static IntPtr GetUnityMainWindow()

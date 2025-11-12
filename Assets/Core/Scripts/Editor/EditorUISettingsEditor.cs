@@ -15,6 +15,7 @@ namespace EditorUtils
             bool prevShowWindowControls = settings.showWindowControls;
             bool prevShowMenuBar = settings.showMenuBar;
             bool prevHideStatusBar = settings.hideStatusBar;
+            bool prevEnableWindowDrag = settings.enableWindowDrag;
 
             DrawDefaultInspector();
             
@@ -101,6 +102,21 @@ namespace EditorUtils
                     MenuBarHider.HideTitleBar();
                     MenuBarHider.ShowTitleBar();
                 }   
+            }
+            
+            if (prevEnableWindowDrag != settings.enableWindowDrag)
+            {
+                settings.SaveSettings();
+                if (settings.enableWindowDrag)
+                {
+                    Debug.Log("Window Drag checkbox checked - enabling window drag");
+                    WindowControlsOverlay.ShowDragArea();
+                }
+                else
+                {
+                    Debug.Log("Window Drag checkbox unchecked - disabling window drag");
+                    WindowControlsOverlay.HideDragArea();
+                }
             }
         }
     }
