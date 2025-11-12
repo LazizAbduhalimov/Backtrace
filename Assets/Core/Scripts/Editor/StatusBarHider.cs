@@ -173,7 +173,7 @@ namespace EditorUtils
                                         }
                                     }
                                 }
-                                
+                            
                                 // Глобальная перерисовка
                                 EditorApplication.RepaintHierarchyWindow();
                                 EditorApplication.RepaintProjectWindow();

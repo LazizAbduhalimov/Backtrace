@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using UnityEditor;
@@ -15,9 +17,17 @@ namespace EditorUtils
         private static bool _isVisible = false;
         private static IntPtr _unityWindowHandle = IntPtr.Zero;
         
+        // Кеш для меню элементов
+        private static List<string> _cachedMenuItems = null;
+        private static Dictionary<string, List<string>> _cachedGroupedMenus = null;
+        private static bool _menuCacheInitialized = false;
+        private static int _lastAssemblyCount = 0;
+        
         static WindowControlsOverlay()
         {
             EditorApplication.delayCall += Initialize;
+            // Инициализируем кеш меню в фоне
+            EditorApplication.delayCall += InitializeMenuCache;
         }
         
         private static void Initialize()
@@ -29,6 +39,30 @@ namespace EditorUtils
             if (settings.showWindowControls)
             {
                 ShowControls();
+            }
+        }
+        
+        private static void InitializeMenuCache()
+        {
+            if (!_menuCacheInitialized)
+            {
+                try
+                {
+                    Debug.Log("Initializing menu cache...");
+                    var startTime = System.DateTime.Now;
+                    
+                    _cachedMenuItems = GetAllMenuItems();
+                    _cachedGroupedMenus = GroupMenuItems(_cachedMenuItems);
+                    _menuCacheInitialized = true;
+                    _lastAssemblyCount = System.AppDomain.CurrentDomain.GetAssemblies().Length;
+                    
+                    var elapsed = System.DateTime.Now - startTime;
+                    Debug.Log($"Menu cache initialized in {elapsed.TotalMilliseconds:F0}ms. Found {_cachedMenuItems.Count} menu items in {_cachedGroupedMenus.Count} categories.");
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogError($"Failed to initialize menu cache: {e.Message}");
+                }
             }
         }
         
@@ -61,7 +95,10 @@ namespace EditorUtils
             var root = rootField?.GetValue(toolbar) as VisualElement;
             if (root == null) return;
 
-            // Ищем toolbar и его элементы
+            // Ищем левую зону для кнопки Elements
+            var leftZone = root.Q("ToolbarZoneLeftAlign") ?? root.Q("ToolbarZoneLeftAlign", "ToolbarZone");
+            
+            // Ищем правую зону для кнопок управления окном
             var rightZone = root.Q("ToolbarZoneRightAlign") ?? root.Q("ToolbarZoneRightAlign", "ToolbarZone");
             if (rightZone == null)
             {
@@ -98,7 +135,14 @@ namespace EditorUtils
                 return;
             }
 
-            // Создаем контейнер для наших кнопок
+            // Создаем кнопку MenuBar в левой зоне
+            if (leftZone != null && leftZone.Q("MenuBarButton") == null)
+            {
+                var menuBarButton = CreateMenuBarButton();
+                leftZone.Add(menuBarButton);
+            }
+
+            // Создаем контейнер для кнопок управления окном в правой зоне
             var container = new VisualElement()
             {
                 name = ContainerName,
@@ -185,6 +229,392 @@ namespace EditorUtils
             });
             
             return button;
+        }
+        
+        private static Button CreateMenuBarButton()
+        {
+            var menuBarButton = new Button()
+            {
+                text = "MenuBar ▼",
+                name = "MenuBarButton",
+                tooltip = "Show main menu bar",
+                style = {
+                    minWidth = 75,
+                    minHeight = 20,
+                    maxHeight = 20,
+                    marginLeft = 5,
+                    marginRight = 3,
+                    paddingLeft = 8,
+                    paddingRight = 8,
+                    paddingTop = 2,
+                    paddingBottom = 2,
+                    fontSize = 11,
+                    backgroundColor = Color.clear,
+                    borderTopWidth = 0,
+                    borderBottomWidth = 0,
+                    borderLeftWidth = 0,
+                    borderRightWidth = 0,
+                    borderTopLeftRadius = 3,
+                    borderTopRightRadius = 3,
+                    borderBottomLeftRadius = 3,
+                    borderBottomRightRadius = 3,
+                    color = EditorGUIUtility.isProSkin ? Color.white : Color.black
+                }
+            };
+            
+            // Добавляем класс toolbar кнопки для нативного стиля
+            menuBarButton.AddToClassList("unity-toolbar-button");
+            
+            // Эффекты при наведении
+            var hoverColor = EditorGUIUtility.isProSkin ? new Color(0.3f, 0.3f, 0.3f) : new Color(0.8f, 0.8f, 0.8f);
+            
+            menuBarButton.RegisterCallback<MouseEnterEvent>((evt) => {
+                menuBarButton.style.backgroundColor = hoverColor;
+            });
+            
+            menuBarButton.RegisterCallback<MouseLeaveEvent>((evt) => {
+                menuBarButton.style.backgroundColor = Color.clear;
+            });
+            
+            // Используем клик для более точного позиционирования
+            menuBarButton.RegisterCallback<ClickEvent>((evt) => {
+                ShowMenuBarDropdown(menuBarButton);
+            });
+            
+            return menuBarButton;
+        }
+        
+        private static void ShowMenuBarDropdown(VisualElement button = null)
+        {
+            var menu = new GenericMenu();
+            
+            try
+            {
+                // Используем кешированные данные или создаем их, если кеш не готов
+                List<string> menuItems;
+                Dictionary<string, List<string>> groupedMenus;
+                
+                // Проверяем, не изменилось ли количество сборок (новые плагины/скрипты)
+                var currentAssemblyCount = System.AppDomain.CurrentDomain.GetAssemblies().Length;
+                bool assembliesChanged = _lastAssemblyCount != 0 && _lastAssemblyCount != currentAssemblyCount;
+                
+                if (_menuCacheInitialized && _cachedMenuItems != null && _cachedGroupedMenus != null && !assembliesChanged)
+                {
+                    Debug.Log("Using cached menu items");
+                    menuItems = _cachedMenuItems;
+                    groupedMenus = _cachedGroupedMenus;
+                }
+                else
+                {
+                    if (assembliesChanged)
+                    {
+                        Debug.Log($"Assembly count changed from {_lastAssemblyCount} to {currentAssemblyCount}, refreshing cache...");
+                    }
+                    else
+                    {
+                        Debug.Log("Cache not ready, generating menu items on demand...");
+                    }
+                    
+                    var startTime = System.DateTime.Now;
+                    menuItems = GetAllMenuItems();
+                    groupedMenus = GroupMenuItems(menuItems);
+                    
+                    // Обновляем кеш
+                    _cachedMenuItems = menuItems;
+                    _cachedGroupedMenus = groupedMenus;
+                    _menuCacheInitialized = true;
+                    _lastAssemblyCount = currentAssemblyCount;
+                    
+                    var elapsed = System.DateTime.Now - startTime;
+                    Debug.Log($"Menu cache updated in {elapsed.TotalMilliseconds:F0}ms");
+                }
+                
+                // Добавляем элементы в меню
+                Debug.Log($"Found {menuItems.Count} total menu items");
+                
+                var sortedCategories = groupedMenus.OrderBy(x => GetMenuOrder(x.Key)).ToList();
+                
+                for (int categoryIndex = 0; categoryIndex < sortedCategories.Count; categoryIndex++)
+                {
+                    var category = sortedCategories[categoryIndex];
+                    Debug.Log($"Category '{category.Key}' has {category.Value.Count} items");
+                    
+                    foreach (var menuItem in category.Value.OrderBy(x => x))
+                    {
+                        var displayName = menuItem;
+                        var isValidMenuItem = IsValidMenuItem(menuItem);
+                        
+                        if (isValidMenuItem)
+                        {
+                            menu.AddItem(new GUIContent(displayName), false, () => {
+                                try
+                                {
+                                    EditorApplication.ExecuteMenuItem(menuItem);
+                                }
+                                catch (System.Exception e)
+                                {
+                                    Debug.LogWarning($"Failed to execute menu item '{menuItem}': {e.Message}");
+                                }
+                            });
+                        }
+                        else
+                        {
+                            // Добавляем как отключенный элемент только если это не пустая строка
+                            if (!string.IsNullOrEmpty(displayName))
+                            {
+                                menu.AddDisabledItem(new GUIContent(displayName));
+                            }
+                        }
+                    }
+                    
+                    // Добавляем разделитель после каждой категории (кроме последней)
+                    if (categoryIndex < sortedCategories.Count - 1)
+                    {
+                        menu.AddSeparator("");
+                    }
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"Failed to build dynamic menu: {e.Message}");
+                
+                // Fallback к статичному меню при ошибке
+                AddFallbackMenuItems(menu);
+            }
+            
+            // Показываем меню
+            if (button != null)
+            {
+                var screenPos = button.worldBound;
+                menu.DropDown(new Rect(screenPos.x, screenPos.y + screenPos.height, 0, 0));
+            }
+            else
+            {
+                menu.ShowAsContext();
+            }
+        }
+        
+        private static Dictionary<string, List<string>> GroupMenuItems(List<string> menuItems)
+        {
+            var groupedMenus = new Dictionary<string, List<string>>();
+            
+            foreach (var item in menuItems)
+            {
+                var parts = item.Split('/');
+                if (parts.Length > 0)
+                {
+                    var mainCategory = parts[0];
+                    
+                    // Исключаем ненужные категории
+                    if (mainCategory.Equals("CONTEXT", System.StringComparison.OrdinalIgnoreCase) ||
+                        mainCategory.Equals("Internal", System.StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+                    
+                    if (!groupedMenus.ContainsKey(mainCategory))
+                        groupedMenus[mainCategory] = new List<string>();
+                        
+                    groupedMenus[mainCategory].Add(item);
+                }
+            }
+            
+            return groupedMenus;
+        }
+        
+        /// <summary>
+        /// Принудительно обновляет кеш меню (полезно при добавлении новых MenuItem в рантайме)
+        /// </summary>
+        public static void RefreshMenuCache()
+        {
+            Debug.Log("Refreshing menu cache...");
+            var startTime = System.DateTime.Now;
+            
+            try
+            {
+                _cachedMenuItems = GetAllMenuItems();
+                _cachedGroupedMenus = GroupMenuItems(_cachedMenuItems);
+                _menuCacheInitialized = true;
+                _lastAssemblyCount = System.AppDomain.CurrentDomain.GetAssemblies().Length;
+                
+                var elapsed = System.DateTime.Now - startTime;
+                Debug.Log($"Menu cache refreshed in {elapsed.TotalMilliseconds:F0}ms. Found {_cachedMenuItems.Count} menu items in {_cachedGroupedMenus.Count} categories.");
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"Failed to refresh menu cache: {e.Message}");
+                _menuCacheInitialized = false;
+            }
+        }
+        
+        /// <summary>
+        /// Очищает кеш меню
+        /// </summary>
+        public static void ClearMenuCache()
+        {
+            Debug.Log("Clearing menu cache...");
+            _cachedMenuItems = null;
+            _cachedGroupedMenus = null;
+            _menuCacheInitialized = false;
+        }
+        
+        private static List<string> GetAllMenuItems()
+        {
+            var menuItems = new List<string>();
+            
+            try
+            {
+                // Получаем все типы с MenuItem атрибутами
+                var assemblies = System.AppDomain.CurrentDomain.GetAssemblies();
+                
+                foreach (var assembly in assemblies)
+                {
+                    try
+                    {
+                        var types = assembly.GetTypes();
+                        
+                        foreach (var type in types)
+                        {
+                            var methods = type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+                            
+                            foreach (var method in methods)
+                            {
+                                var menuItemAttrs = method.GetCustomAttributes(typeof(MenuItem), false);
+                                
+                                foreach (MenuItem attr in menuItemAttrs)
+                                {
+                                    if (!string.IsNullOrEmpty(attr.menuItem))
+                                    {
+                                        menuItems.Add(attr.menuItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch (System.Exception)
+                    {
+                        // Пропускаем сборки, которые не удается загрузить
+                        continue;
+                    }
+                }
+                
+                // Также добавляем стандартные Unity меню, которые могут не иметь MenuItem атрибутов
+                AddStandardUnityMenus(menuItems);
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogWarning($"Failed to get menu items via reflection: {e.Message}");
+            }
+            
+            return menuItems.Distinct().Where(item => 
+                !string.IsNullOrEmpty(item) && 
+                !item.Contains("%") && // Исключаем элементы с горячими клавишами
+                !item.StartsWith("internal:", System.StringComparison.OrdinalIgnoreCase) && // Исключаем внутренние
+                !item.StartsWith("CONTEXT/", System.StringComparison.OrdinalIgnoreCase) && // Исключаем контекстные
+                !item.Contains("---") && // Исключаем разделители
+                !item.Contains("_MenuItem") // Исключаем внутренние Unity элементы
+            ).ToList();
+        }
+        
+        private static void AddStandardUnityMenus(List<string> menuItems)
+        {
+            // Добавляем стандартные Unity меню, которые могут не обнаруживаться через рефлексию
+            var standardMenus = new string[]
+            {
+                // File
+                "File/New Scene", "File/Open Scene", "File/Save", "File/Save As...", "File/Save Project",
+                "File/Build Settings...", "File/Build And Run", "File/Exit",
+                
+                // Edit
+                "Edit/Undo", "Edit/Redo", "Edit/Cut", "Edit/Copy", "Edit/Paste", "Edit/Duplicate", "Edit/Delete",
+                "Edit/Frame Selected", "Edit/Lock View to Selected", "Edit/Find", "Edit/Select All",
+                "Edit/Play", "Edit/Pause", "Edit/Step",
+                "Edit/Project Settings...", "Edit/Preferences...",
+                
+                // Assets
+                "Assets/Create/Folder", "Assets/Create/C# Script", "Assets/Create/Material", "Assets/Create/Scene",
+                "Assets/Show in Explorer", "Assets/Open", "Assets/Delete", "Assets/Refresh",
+                "Assets/Import New Asset...", "Assets/Export Package...",
+                
+                // GameObject
+                "GameObject/Create Empty", "GameObject/Create Empty Child",
+                "GameObject/3D Object/Cube", "GameObject/3D Object/Sphere", "GameObject/3D Object/Capsule",
+                "GameObject/Camera", "GameObject/Light/Directional Light",
+                
+                // Component - основные
+                "Component/Physics/Rigidbody", "Component/Physics/Box Collider",
+                "Component/Mesh/Mesh Renderer", "Component/Audio/Audio Source",
+                
+                // Window
+                "Window/General/Project", "Window/General/Console", "Window/General/Hierarchy",
+                "Window/General/Inspector", "Window/General/Scene", "Window/General/Game",
+                "Window/Package Manager",
+                
+                // Help
+                "Help/About Unity", "Help/Unity Manual", "Help/Scripting Reference", "Help/Report a Bug..."
+            };
+            
+            foreach (var menu in standardMenus)
+            {
+                if (!menuItems.Contains(menu))
+                {
+                    menuItems.Add(menu);
+                }
+            }
+        }
+        
+        private static int GetMenuOrder(string category)
+        {
+            // Определяем порядок основных категорий
+            switch (category)
+            {
+                case "File": return 0;
+                case "Edit": return 1;
+                case "Assets": return 2;
+                case "GameObject": return 3;
+                case "Component": return 4;
+                case "Services": return 5;
+                case "Jobs": return 6;
+                case "Tools": return 7;
+                case "Window": return 8;
+                case "Help": return 9;
+                default: return 999; // Кастомные меню в конце
+            }
+        }
+        
+        private static bool IsValidMenuItem(string menuItem)
+        {
+            try
+            {
+                // Проверяем, существует ли команда меню
+                // Некоторые меню могут быть недоступны в зависимости от контекста
+                return !string.IsNullOrEmpty(menuItem) && !menuItem.Contains("---");
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        
+        private static void AddFallbackMenuItems(GenericMenu menu)
+        {
+            // Основные меню как fallback
+            menu.AddItem(new GUIContent("File/New Scene"), false, () => EditorApplication.ExecuteMenuItem("File/New Scene"));
+            menu.AddItem(new GUIContent("File/Save"), false, () => EditorApplication.ExecuteMenuItem("File/Save"));
+            menu.AddSeparator("File/");
+            menu.AddItem(new GUIContent("Edit/Preferences..."), false, () => EditorApplication.ExecuteMenuItem("Edit/Preferences..."));
+            menu.AddItem(new GUIContent("Edit/Project Settings..."), false, () => EditorApplication.ExecuteMenuItem("Edit/Project Settings..."));
+            menu.AddSeparator("Edit/");
+            menu.AddItem(new GUIContent("Assets/Create/C# Script"), false, () => EditorApplication.ExecuteMenuItem("Assets/Create/C# Script"));
+            menu.AddItem(new GUIContent("Assets/Create/Folder"), false, () => EditorApplication.ExecuteMenuItem("Assets/Create/Folder"));
+            menu.AddSeparator("Assets/");
+            menu.AddItem(new GUIContent("GameObject/Create Empty"), false, () => EditorApplication.ExecuteMenuItem("GameObject/Create Empty"));
+            menu.AddItem(new GUIContent("GameObject/3D Object/Cube"), false, () => EditorApplication.ExecuteMenuItem("GameObject/3D Object/Cube"));
+            menu.AddSeparator("GameObject/");
+            menu.AddItem(new GUIContent("Window/General/Console"), false, () => EditorApplication.ExecuteMenuItem("Window/General/Console"));
+            menu.AddItem(new GUIContent("Window/General/Project"), false, () => EditorApplication.ExecuteMenuItem("Window/General/Project"));
+            menu.AddSeparator("Window/");
+            menu.AddItem(new GUIContent("Help/About Unity"), false, () => EditorApplication.ExecuteMenuItem("Help/About Unity"));
         }
         
         private static void RemoveFromToolbar()
