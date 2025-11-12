@@ -13,22 +13,21 @@ namespace EditorUtils
         static MenuBarHider()
         {
             EditorApplication.delayCall += InitializeMenuBarHiding;
+            EditorApplication.quitting += () =>
+            {
+                var settings = EditorUISettings.Instance;
+                settings.SaveSettings();
+            };
         }
 
         private static void InitializeMenuBarHiding()
         {
             _unityWindowHandle = GetUnityMainWindow();
             var settings = EditorUISettings.Instance;
+            settings.LoadSettings();
             
-            if (settings.autoHideOnStart && settings.hideMenuBar)
-            {
-                HideMenuBar();
-            }
-            
-            if (settings.autoHideOnStart && settings.hideTitleBar)
-            {
-                HideTitleBar();
-            }
+            if (settings.hideMenuBar) HideMenuBar();
+            if (settings.hideTitleBar) HideTitleBar();
         }
 
         private static IntPtr _originalMenu = IntPtr.Zero;
@@ -40,26 +39,17 @@ namespace EditorUtils
                 if (_unityWindowHandle == IntPtr.Zero)
                     _unityWindowHandle = GetUnityMainWindow();
 
-                Debug.Log($"Unity window handle: {_unityWindowHandle}");
-
                 if (_unityWindowHandle != IntPtr.Zero)
                 {
                     // Сохраняем оригинальное меню перед удалением
                     _originalMenu = GetMenu(_unityWindowHandle);
-                    Debug.Log($"Original menu handle: {_originalMenu}");
                     
                     if (_originalMenu != IntPtr.Zero)
                     {
                         // Удаляем меню полностью
                         bool setResult = SetMenu(_unityWindowHandle, IntPtr.Zero);
-                        Debug.Log($"SetMenu result: {setResult}");
-                        
-                        // Перерисовываем окно без меню
                         bool drawResult = DrawMenuBar(_unityWindowHandle);
-                        Debug.Log($"DrawMenuBar result: {drawResult}");
-                        
                         _isMenuBarHidden = true;
-                        Debug.Log("Menu bar hidden successfully");
                     }
                     else
                     {
@@ -104,7 +94,6 @@ namespace EditorUtils
                     UpdateWindow(_unityWindowHandle);
                     
                     _isMenuBarHidden = false;
-                    Debug.Log("Menu bar restore attempted");
                 }
             }
             catch (Exception e)
@@ -130,7 +119,6 @@ namespace EditorUtils
                     SetWindowPos(_unityWindowHandle, IntPtr.Zero, 0, 0, 0, 0, 
                         SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
                     
-                    Debug.Log("Title bar hidden");
                 }
             }
             catch (Exception e)
@@ -152,7 +140,6 @@ namespace EditorUtils
                     SetWindowPos(_unityWindowHandle, IntPtr.Zero, 0, 0, 0, 0, 
                         SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
                     
-                    Debug.Log("Title bar restored");
                 }
             }
             catch (Exception e)
@@ -195,14 +182,6 @@ namespace EditorUtils
             }
         }
 
-        public static void ToggleBoth()
-        {
-            ToggleMenuBar();
-            ToggleTitleBar();
-        }
-
-        public static bool IsMenuBarHidden => _isMenuBarHidden;
-
         private static IntPtr GetUnityMainWindow()
         {
             try
@@ -239,7 +218,6 @@ namespace EditorUtils
                     Application.productName,
                     PlayerSettings.productName,
                     "Unity",
-                    "Backtrace"
                 };
 
                 foreach (string title in possibleTitles)

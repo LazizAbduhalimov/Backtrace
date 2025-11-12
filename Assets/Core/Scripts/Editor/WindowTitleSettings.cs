@@ -5,32 +5,25 @@ namespace EditorUtils
 {
     public class EditorUISettings : ScriptableObject
     {
-        [Header("UI Hiding Configuration")]
-        [Tooltip("Hide Unity window title bar")]
         public bool hideTitleBar = false;
-        
-        [Tooltip("Hide main menu bar (File, Edit, Assets, etc.)")]
         public bool hideMenuBar = false;
-        
-        [Header("Auto Settings")]
-        [Tooltip("Automatically hide UI on Unity start")]
-        public bool autoHideOnStart = false;
-        
-        [Header("Advanced Settings")]
-        [Tooltip("Enable debug logging")]
-        public bool enableDebugLogging = false;
 
+        public static EditorUISettings Instance => _instance = _instance != null ? _instance : CreateOrLoadSettings();
         private static EditorUISettings _instance;
-        public static EditorUISettings Instance
+
+        private string HideTitleBarEditorPrefsKey => "EditorUISettings_HideTitleBar";
+        private string HideMenuBarEditorPrefsKey => "EditorUISettings_HideMenuBar";
+
+        public void SaveSettings()
         {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = CreateOrLoadSettings();
-                }
-                return _instance;
-            }
+            EditorPrefs.SetBool(HideTitleBarEditorPrefsKey, hideTitleBar);
+            EditorPrefs.SetBool(HideMenuBarEditorPrefsKey, hideMenuBar);
+        }
+
+        public void LoadSettings()
+        {
+            hideTitleBar = EditorPrefs.GetBool(HideTitleBarEditorPrefsKey, false);
+            hideMenuBar = EditorPrefs.GetBool(HideMenuBarEditorPrefsKey, false);
         }
 
         private static EditorUISettings CreateOrLoadSettings()
@@ -48,69 +41,6 @@ namespace EditorUtils
                 AssetDatabase.SaveAssets();
                 return settings;
             }
-        }
-    }
-
-    [CustomEditor(typeof(EditorUISettings))]
-    public class EditorUISettingsEditor : Editor
-    {
-        public override void OnInspectorGUI()
-        {
-            DrawDefaultInspector();
-            
-            GUILayout.Space(15);
-            
-            EditorGUILayout.LabelField("Quick Controls", EditorStyles.boldLabel);
-            
-            // Тест скрытия Menu Bar
-            EditorGUILayout.BeginVertical("box");
-            EditorGUILayout.LabelField("Menu Bar (File, Edit, Assets, Tools...)", EditorStyles.label);
-            
-            string menuStatus = MenuBarHider.IsMenuBarHidden ? "Hidden" : "Visible";
-            EditorGUILayout.LabelField($"Status: {menuStatus}", EditorStyles.miniLabel);
-            
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Hide Menu Bar"))
-            {
-                Debug.Log("=== Hide Menu Bar Button Clicked ===");
-                MenuBarHider.HideMenuBar();
-            }
-            
-            if (GUILayout.Button("Show Menu Bar"))
-            {
-                Debug.Log("=== Show Menu Bar Button Clicked ===");
-                MenuBarHider.ShowMenuBar();
-            }
-            GUILayout.EndHorizontal();
-            
-            EditorGUILayout.EndVertical();
-            
-            GUILayout.Space(10);
-            
-            // Один тоггл для Title Bar
-            EditorGUILayout.BeginVertical("box");
-            EditorGUILayout.LabelField("Title Bar (Window Header)", EditorStyles.label);
-            
-            if (GUILayout.Button("Toggle Title Bar", GUILayout.Height(30)))
-            {
-                MenuBarHider.ToggleTitleBar();
-            }
-            EditorGUILayout.EndVertical();
-            
-            GUILayout.Space(10);
-            
-            // Один тоггл для всего сразу
-            EditorGUILayout.BeginVertical("box");
-            EditorGUILayout.LabelField("Both Menu + Title Bar", EditorStyles.label);
-            
-            if (GUILayout.Button("Toggle Both", GUILayout.Height(30)))
-            {
-                MenuBarHider.ToggleBoth();
-            }
-            EditorGUILayout.EndVertical();
-            
-            GUILayout.Space(15);
-            EditorGUILayout.HelpBox("Use menu: Tools → Editor UI → [Options]", MessageType.Info);
         }
     }
 }

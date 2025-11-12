@@ -12,9 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9587729b0fdde524e964bb925ad2a5cd, type: 3}
   m_Name: WindowTitleSettings
   m_EditorClassIdentifier: Assembly-CSharp-Editor::EditorUtils.WindowTitleSettings
-  hideTitleBar: 1
+  hideTitleBar: 0
   hideMenuBar: 1
-  hideToolbar: 1
-  autoHideOnStart: 1
-  enableF11Toggle: 1
-  enableDebugLogging: 0
