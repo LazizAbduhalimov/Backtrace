@@ -13,6 +13,7 @@ namespace EditorUtils
             bool prevHideTitleBar = settings.hideTitleBar;
             bool prevHideMenuBar = settings.hideMenuBar;
             bool prevShowWindowControls = settings.showWindowControls;
+            bool prevShowMenuBar = settings.showMenuBar;
             bool prevHideStatusBar = settings.hideStatusBar;
 
             DrawDefaultInspector();
@@ -52,13 +53,28 @@ namespace EditorUtils
                 settings.SaveSettings();
                 if (settings.showWindowControls)
                 {
-                    Debug.Log("Window Controls checkbox checked - showing controls");
-                    WindowControlsOverlay.ShowControls();
+                    Debug.Log("Window Controls checkbox checked - showing window controls");
+                    WindowControlsOverlay.ShowWindowControls();
                 }
                 else
                 {
-                    Debug.Log("Window Controls checkbox unchecked - hiding controls");
-                    WindowControlsOverlay.HideControls();
+                    Debug.Log("Window Controls checkbox unchecked - hiding window controls");
+                    WindowControlsOverlay.HideWindowControls();
+                }
+            }
+            
+            if (prevShowMenuBar != settings.showMenuBar)
+            {
+                settings.SaveSettings();
+                if (settings.showMenuBar)
+                {
+                    Debug.Log("MenuBar Button checkbox checked - showing MenuBar button");
+                    WindowControlsOverlay.ShowMenuBarButton();
+                }
+                else
+                {
+                    Debug.Log("MenuBar Button checkbox unchecked - hiding MenuBar button");
+                    WindowControlsOverlay.HideMenuBarButton();
                 }
             }
             

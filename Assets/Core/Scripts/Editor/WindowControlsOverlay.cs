@@ -36,7 +36,8 @@ namespace EditorUtils
             var settings = EditorUISettings.Instance;
             settings.LoadSettings();
             
-            if (settings.showWindowControls)
+            // Показываем элементы toolbar если включен хотя бы один из компонентов
+            if (settings.showWindowControls || settings.showMenuBar)
             {
                 ShowControls();
             }
@@ -76,13 +77,69 @@ namespace EditorUtils
         {
             _isVisible = false;
             _attempted = false;
-            RemoveFromToolbar();
-            EditorApplication.update -= TryInstall;
+            
+            var settings = EditorUISettings.Instance;
+            
+            if (!settings.showWindowControls)
+            {
+                RemoveWindowControlsFromToolbar();
+            }
+            
+            if (!settings.showMenuBar)
+            {
+                RemoveMenuBarButtonFromToolbar();
+            }
+            
+            // Отключаем обновление только если оба компонента отключены
+            if (!settings.showWindowControls && !settings.showMenuBar)
+            {
+                EditorApplication.update -= TryInstall;
+            }
+            else
+            {
+                // Если хотя бы один компонент должен быть виден, перезапускаем установку
+                _attempted = false;
+                EditorApplication.update -= TryInstall;
+                EditorApplication.update += TryInstall;
+            }
+        }
+        
+        public static void ShowMenuBarButton()
+        {
+            var settings = EditorUISettings.Instance;
+            if (!settings.showMenuBar) return;
+            
+            // Перезапускаем установку элементов toolbar
+            _attempted = false;
+            EditorApplication.update += TryInstall;
+        }
+        
+        public static void HideMenuBarButton()
+        {
+            RemoveMenuBarButtonFromToolbar();
+        }
+        
+        public static void ShowWindowControls()
+        {
+            var settings = EditorUISettings.Instance;
+            if (!settings.showWindowControls) return;
+            
+            // Перезапускаем установку элементов toolbar
+            _attempted = false;
+            EditorApplication.update += TryInstall;
+        }
+        
+        public static void HideWindowControls()
+        {
+            RemoveWindowControlsFromToolbar();
         }
         
         private static void TryInstall()
         {
-            if (_attempted || !_isVisible) return;
+            if (_attempted) return;
+
+            var settings = EditorUISettings.Instance;
+            if (!settings.showWindowControls && !settings.showMenuBar) return;
 
             var toolbarType = typeof(UnityEditor.Editor).Assembly.GetType("UnityEditor.Toolbar");
             if (toolbarType == null) return;
@@ -95,7 +152,7 @@ namespace EditorUtils
             var root = rootField?.GetValue(toolbar) as VisualElement;
             if (root == null) return;
 
-            // Ищем левую зону для кнопки Elements
+            // Ищем левую зону для кнопки MenuBar
             var leftZone = root.Q("ToolbarZoneLeftAlign") ?? root.Q("ToolbarZoneLeftAlign", "ToolbarZone");
             
             // Ищем правую зону для кнопок управления окном
@@ -125,48 +182,49 @@ namespace EditorUtils
                 }
             }
             
-            if (rightZone == null) return;
-
-            // Избегаем дубликатов
-            if (rightZone.Q(ContainerName) != null)
-            {
-                _attempted = true;
-                EditorApplication.update -= TryInstall;
-                return;
-            }
-
-            // Создаем кнопку MenuBar в левой зоне
-            if (leftZone != null && leftZone.Q("MenuBarButton") == null)
+            // Создаем кнопку MenuBar в левой зоне (если включена в настройках)
+            if (leftZone != null && leftZone.Q("MenuBarButton") == null && settings.showMenuBar)
             {
                 var menuBarButton = CreateMenuBarButton();
                 leftZone.Add(menuBarButton);
             }
 
-            // Создаем контейнер для кнопок управления окном в правой зоне
-            var container = new VisualElement()
+            // Создаем контейнер для кнопок управления окном только если включен showWindowControls
+            if (settings.showWindowControls && rightZone != null)
             {
-                name = ContainerName,
-                style = {
-                    flexDirection = FlexDirection.Row,
-                    marginLeft = 3,
-                    marginRight = 2
+                // Избегаем дубликатов для window controls
+                if (rightZone.Q(ContainerName) != null)
+                {
+                    _attempted = true;
+                    EditorApplication.update -= TryInstall;
+                    return;
                 }
-            };
 
-            // Кнопка минимизации
-            var minimizeButton = CreateWindowButton("—", "Minimize window", MinimizeWindow, new Color(0.3f, 0.5f, 0.7f));
-            container.Add(minimizeButton);
+                var container = new VisualElement()
+                {
+                    name = ContainerName,
+                    style = {
+                        flexDirection = FlexDirection.Row,
+                        marginLeft = 3,
+                        marginRight = 2
+                    }
+                };
 
-            // Кнопка максимизации/восстановления  
-            var maximizeButton = CreateWindowButton(IsWindowMaximized() ? "R" : "M", "Maximize/Restore window", ToggleMaximizeWindow, new Color(0.3f, 0.7f, 0.3f));
-            container.Add(maximizeButton);
+                // Кнопка минимизации
+                var minimizeButton = CreateWindowButton("—", "Minimize window", MinimizeWindow, new Color(0.3f, 0.5f, 0.7f));
+                container.Add(minimizeButton);
 
-            // Кнопка закрытия
-            var closeButton = CreateWindowButton("X", "Close window", CloseWindow, new Color(0.7f, 0.3f, 0.3f));
-            container.Add(closeButton);
+                // Кнопка максимизации/восстановления  
+                var maximizeButton = CreateWindowButton(IsWindowMaximized() ? "R" : "M", "Maximize/Restore window", ToggleMaximizeWindow, new Color(0.3f, 0.7f, 0.3f));
+                container.Add(maximizeButton);
 
-            // Добавляем в самый конец rightZone (после всех существующих элементов)
-            rightZone.Add(container);
+                // Кнопка закрытия
+                var closeButton = CreateWindowButton("X", "Close window", CloseWindow, new Color(0.7f, 0.3f, 0.3f));
+                container.Add(closeButton);
+
+                // Добавляем в самый конец rightZone (после всех существующих элементов)
+                rightZone.Add(container);
+            }
 
             _attempted = true;
             EditorApplication.update -= TryInstall;
@@ -632,6 +690,58 @@ namespace EditorUtils
                 var root = rootField?.GetValue(toolbar) as VisualElement;
                 if (root == null) return;
 
+                var container = root.Q(ContainerName);
+                container?.RemoveFromHierarchy();
+                
+                var menuBarButton = root.Q("MenuBarButton");
+                menuBarButton?.RemoveFromHierarchy();
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"Failed to remove window controls from toolbar: {e.Message}");
+            }
+        }
+        
+        private static void RemoveMenuBarButtonFromToolbar()
+        {
+            try
+            {
+                var toolbarType = typeof(UnityEditor.Editor).Assembly.GetType("UnityEditor.Toolbar");
+                if (toolbarType == null) return;
+
+                var toolbars = Resources.FindObjectsOfTypeAll(toolbarType);
+                if (toolbars == null || toolbars.Length == 0) return;
+
+                var toolbar = toolbars[0];
+                var rootField = toolbarType.GetField("m_Root", BindingFlags.NonPublic | BindingFlags.Instance);
+                var root = rootField?.GetValue(toolbar) as VisualElement;
+                if (root == null) return;
+
+                var menuBarButton = root.Q("MenuBarButton");
+                menuBarButton?.RemoveFromHierarchy();
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"Failed to remove MenuBar button from toolbar: {e.Message}");
+            }
+        }
+        
+        private static void RemoveWindowControlsFromToolbar()
+        {
+            try
+            {
+                var toolbarType = typeof(UnityEditor.Editor).Assembly.GetType("UnityEditor.Toolbar");
+                if (toolbarType == null) return;
+
+                var toolbars = Resources.FindObjectsOfTypeAll(toolbarType);
+                if (toolbars == null || toolbars.Length == 0) return;
+
+                var toolbar = toolbars[0];
+                var rootField = toolbarType.GetField("m_Root", BindingFlags.NonPublic | BindingFlags.Instance);
+                var root = rootField?.GetValue(toolbar) as VisualElement;
+                if (root == null) return;
+
+                // Удаляем только контейнер с кнопками управления окном
                 var container = root.Q(ContainerName);
                 container?.RemoveFromHierarchy();
             }

@@ -5,9 +5,22 @@ namespace EditorUtils
 {
     public class EditorUISettings : ScriptableObject
     {
+        [Header("Window Appearance")]
+        [Tooltip("Hide Unity window title bar to save vertical space")]
         public bool hideTitleBar = false;
+        
+        [Tooltip("Hide Unity menu bar (File, Edit, Assets, etc.)")]
         public bool hideMenuBar = false;
+        
+        [Header("Custom Controls")]
+        [Tooltip("Show window control buttons (minimize, maximize, close) in toolbar")]
         public bool showWindowControls = false;
+        
+        [Tooltip("Show MenuBar button in toolbar to access all Unity menus")]
+        public bool showMenuBar = true;
+        
+        [Header("Status Bar")]
+        [Tooltip("Hide Unity status bar at the bottom")]
         public bool hideStatusBar = false;
 
         public static EditorUISettings Instance => _instance = _instance != null ? _instance : CreateOrLoadSettings();
@@ -16,6 +29,7 @@ namespace EditorUtils
         private string HideTitleBarEditorPrefsKey => "EditorUISettings_HideTitleBar";
         private string HideMenuBarEditorPrefsKey => "EditorUISettings_HideMenuBar";
         private string ShowWindowControlsEditorPrefsKey => "EditorUISettings_ShowWindowControls";
+        private string ShowMenuBarButtonEditorPrefsKey => "EditorUISettings_ShowMenuBarButton";
         private string HideStatusBarEditorPrefsKey => "EditorUISettings_HideStatusBar";
 
         public void SaveSettings()
@@ -23,6 +37,7 @@ namespace EditorUtils
             EditorPrefs.SetBool(HideTitleBarEditorPrefsKey, hideTitleBar);
             EditorPrefs.SetBool(HideMenuBarEditorPrefsKey, hideMenuBar);
             EditorPrefs.SetBool(ShowWindowControlsEditorPrefsKey, showWindowControls);
+            EditorPrefs.SetBool(ShowMenuBarButtonEditorPrefsKey, showMenuBar);
             EditorPrefs.SetBool(HideStatusBarEditorPrefsKey, hideStatusBar);
         }
 
@@ -31,6 +46,7 @@ namespace EditorUtils
             hideTitleBar = EditorPrefs.GetBool(HideTitleBarEditorPrefsKey, false);
             hideMenuBar = EditorPrefs.GetBool(HideMenuBarEditorPrefsKey, false);
             showWindowControls = EditorPrefs.GetBool(ShowWindowControlsEditorPrefsKey, false);
+            showMenuBar = EditorPrefs.GetBool(ShowMenuBarButtonEditorPrefsKey, true);
             hideStatusBar = EditorPrefs.GetBool(HideStatusBarEditorPrefsKey, false);
         }
 
