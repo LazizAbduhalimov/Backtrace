@@ -174,61 +174,6 @@ namespace EditorUtils.WindowControls
             return root.Q("ToolbarZoneLeftAlign") ?? root.Q("ToolbarZoneLeftAlign", "ToolbarZone");
         }
 
-        private static Button CreateWindowButton(string text, string tooltip, System.Action action, Color? accentColor = null)
-        {
-            var button = new Button(action)
-            {
-                text = text,
-                tooltip = tooltip,
-                style = {
-                    minWidth = 24,
-                    minHeight = 18,
-                    maxWidth = 24,
-                    maxHeight = 18,
-                    marginLeft = 1,
-                    marginRight = 1,
-                    paddingLeft = 0,
-                    paddingRight = 0,
-                    paddingTop = 0,
-                    paddingBottom = 0,
-                    fontSize = 12,
-                    unityFontStyleAndWeight = FontStyle.Bold,
-                    backgroundColor = Color.clear,
-                    borderTopWidth = 0,
-                    borderBottomWidth = 0,
-                    borderLeftWidth = 0,
-                    borderRightWidth = 0,
-                    borderTopLeftRadius = 3,
-                    borderTopRightRadius = 3,
-                    borderBottomLeftRadius = 3,
-                    borderBottomRightRadius = 3,
-                    color = EditorGUIUtility.isProSkin ? Color.white : Color.black
-                }
-            };
-
-            button.AddToClassList("unity-toolbar-button");
-
-            var hoverColor = accentColor ?? (EditorGUIUtility.isProSkin ? new Color(0.3f, 0.3f, 0.3f) : new Color(0.8f, 0.8f, 0.8f));
-
-            button.RegisterCallback<MouseEnterEvent>((evt) => {
-                button.style.backgroundColor = hoverColor;
-            });
-
-            button.RegisterCallback<MouseLeaveEvent>((evt) => {
-                button.style.backgroundColor = Color.clear;
-            });
-
-            button.RegisterCallback<MouseDownEvent>((evt) => {
-                button.style.backgroundColor = new Color(hoverColor.r * 0.8f, hoverColor.g * 0.8f, hoverColor.b * 0.8f);
-            });
-
-            button.RegisterCallback<MouseUpEvent>((evt) => {
-                button.style.backgroundColor = hoverColor;
-            });
-
-            return button;
-        }
-
         private static VisualElement CreateCircleButton(Color circleColor, string tooltip, System.Action action)
         {
             var button = new VisualElement()

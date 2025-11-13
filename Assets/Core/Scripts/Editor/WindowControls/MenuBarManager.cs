@@ -163,21 +163,11 @@ namespace EditorUtils.WindowControls
 
                 if (_menuCacheInitialized && _cachedMenuItems != null && _cachedGroupedMenus != null && !assembliesChanged)
                 {
-                    Debug.Log("Using cached menu items");
                     menuItems = _cachedMenuItems;
                     groupedMenus = _cachedGroupedMenus;
                 }
                 else
                 {
-                    if (assembliesChanged)
-                    {
-                        Debug.Log($"Assembly count changed from {_lastAssemblyCount} to {currentAssemblyCount}, refreshing cache...");
-                    }
-                    else
-                    {
-                        Debug.Log("Cache not ready, generating menu items on demand...");
-                    }
-
                     var startTime = System.DateTime.Now;
                     menuItems = GetAllMenuItems();
                     groupedMenus = GroupMenuItems(menuItems);
@@ -186,19 +176,14 @@ namespace EditorUtils.WindowControls
                     _cachedGroupedMenus = groupedMenus;
                     _menuCacheInitialized = true;
                     _lastAssemblyCount = currentAssemblyCount;
-
-                    var elapsed = System.DateTime.Now - startTime;
-                    Debug.Log($"Menu cache updated in {elapsed.TotalMilliseconds:F0}ms");
                 }
 
-                Debug.Log($"Found {menuItems.Count} total menu items");
-
-                var sortedCategories = groupedMenus.OrderBy(x => GetMenuOrder(x.Key)).ToList();
+                // Сортируем категории по алфавиту
+                var sortedCategories = groupedMenus.OrderBy(x => x.Key).ToList();
 
                 for (int categoryIndex = 0; categoryIndex < sortedCategories.Count; categoryIndex++)
                 {
                     var category = sortedCategories[categoryIndex];
-                    Debug.Log($"Category '{category.Key}' has {category.Value.Count} items");
 
                     foreach (var menuItem in category.Value.OrderBy(x => x))
                     {
@@ -254,16 +239,12 @@ namespace EditorUtils.WindowControls
             {
                 try
                 {
-                    Debug.Log("Initializing menu cache...");
                     var startTime = System.DateTime.Now;
 
                     _cachedMenuItems = GetAllMenuItems();
                     _cachedGroupedMenus = GroupMenuItems(_cachedMenuItems);
                     _menuCacheInitialized = true;
                     _lastAssemblyCount = System.AppDomain.CurrentDomain.GetAssemblies().Length;
-
-                    var elapsed = System.DateTime.Now - startTime;
-                    Debug.Log($"Menu cache initialized in {elapsed.TotalMilliseconds:F0}ms. Found {_cachedMenuItems.Count} menu items in {_cachedGroupedMenus.Count} categories.");
                 }
                 catch (System.Exception e)
                 {
@@ -348,22 +329,6 @@ namespace EditorUtils.WindowControls
             }
 
             return groupedMenus;
-        }
-
-        private static int GetMenuOrder(string categoryName)
-        {
-            var order = new Dictionary<string, int>
-            {
-                {"File", 1},
-                {"Edit", 2},
-                {"Assets", 3},
-                {"GameObject", 4},
-                {"Component", 5},
-                {"Window", 6},
-                {"Help", 7}
-            };
-
-            return order.ContainsKey(categoryName) ? order[categoryName] : 100;
         }
 
         private static void AddStandardUnityMenus(List<string> menuItems)

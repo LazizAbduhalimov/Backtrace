@@ -45,7 +45,6 @@ namespace EditorUtils
             {
                 _shouldMonitorMenuBar = true;
                 EditorApplication.update += MonitorMenuBarState;
-                Debug.Log("Started menu bar monitoring");
             }
         }
         
@@ -55,7 +54,6 @@ namespace EditorUtils
             {
                 _shouldMonitorMenuBar = false;
                 EditorApplication.update -= MonitorMenuBarState;
-                Debug.Log("Stopped menu bar monitoring");
             }
         }
         
@@ -71,7 +69,6 @@ namespace EditorUtils
                     if (currentMenu != IntPtr.Zero)
                     {
                         // Меню бар появился снова - скрываем его
-                        Debug.Log("Menu bar reappeared, hiding it again");
                         SetMenu(_unityWindowHandle, IntPtr.Zero);
                         DrawMenuBar(_unityWindowHandle); // Принудительная перерисовка
                     }
@@ -102,7 +99,6 @@ namespace EditorUtils
                         DrawMenuBar(_unityWindowHandle);
                         _isMenuBarHidden = true;
                         StartMenuBarMonitoring(); // Начинаем мониторинг
-                        Debug.Log("Menu bar hidden and monitoring started");
                     }
                     else
                     {
@@ -139,7 +135,6 @@ namespace EditorUtils
                     UpdateWindow(_unityWindowHandle);
                     
                     _isMenuBarHidden = false;
-                    Debug.Log("Menu bar restored and monitoring stopped");
                 }
             }
             catch (Exception e)

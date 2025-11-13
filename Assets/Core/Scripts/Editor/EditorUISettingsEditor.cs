@@ -24,12 +24,10 @@ namespace EditorUtils
                 settings.SaveSettings();
                 if (settings.hideTitleBar)
                 {
-                    Debug.Log("Title Bar checkbox checked - hiding title bar");
                     MenuBarHider.HideTitleBar();
                 }
                 else
                 {
-                    Debug.Log("Title Bar checkbox unchecked - showing title bar");
                     MenuBarHider.ShowTitleBar();
                 }
             }
@@ -39,12 +37,10 @@ namespace EditorUtils
                 settings.SaveSettings();
                 if (settings.hideMenuBar)
                 {
-                    Debug.Log("Menu Bar checkbox checked - hiding menu bar");
                     MenuBarHider.HideMenuBar();
                 }
                 else
                 {
-                    Debug.Log("Menu Bar checkbox unchecked - showing menu bar");
                     MenuBarHider.ShowMenuBar();
                 }
             }
@@ -54,12 +50,10 @@ namespace EditorUtils
                 settings.SaveSettings();
                 if (settings.showWindowControls)
                 {
-                    Debug.Log("Window Controls checkbox checked - showing window controls");
                     EditorUtils.WindowControls.WindowControlsCoordinator.ShowWindowControls();
                 }
                 else
                 {
-                    Debug.Log("Window Controls checkbox unchecked - hiding window controls");
                     EditorUtils.WindowControls.WindowControlsCoordinator.HideWindowControls();
                 }
             }
@@ -69,12 +63,10 @@ namespace EditorUtils
                 settings.SaveSettings();
                 if (settings.showMenuBar)
                 {
-                    Debug.Log("MenuBar Button checkbox checked - showing MenuBar button");
                     EditorUtils.WindowControls.WindowControlsCoordinator.ShowMenuBarButton();
                 }
                 else
                 {
-                    Debug.Log("MenuBar Button checkbox unchecked - hiding MenuBar button");
                     EditorUtils.WindowControls.WindowControlsCoordinator.HideMenuBarButton();
                 }
             }
@@ -84,12 +76,10 @@ namespace EditorUtils
                 settings.SaveSettings();
                 if (settings.hideStatusBar)
                 {
-                    Debug.Log("Status Bar checkbox checked - hiding status bar");
                     StatusBarHider.HideStatusBar();
                 }
                 else
                 {
-                    Debug.Log("Status Bar checkbox unchecked - showing status bar");
                     StatusBarHider.ShowStatusBar();
                 }
                 if (settings.hideTitleBar)
@@ -109,12 +99,10 @@ namespace EditorUtils
                 settings.SaveSettings();
                 if (settings.enableWindowDrag)
                 {
-                    Debug.Log("Window Drag checkbox checked - enabling window drag");
                     EditorUtils.WindowControls.WindowControlsCoordinator.ShowDragArea();
                 }
                 else
                 {
-                    Debug.Log("Window Drag checkbox unchecked - disabling window drag");
                     EditorUtils.WindowControls.WindowControlsCoordinator.HideDragArea();
                 }
             }

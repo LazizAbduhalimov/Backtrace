@@ -20,7 +20,7 @@ namespace EditorUtils
         public bool showMenuBar = true;
         
         [Tooltip("Enable dragging Unity window by clicking and dragging toolbar area")]
-        public bool enableWindowDrag = true;
+        public bool enableWindowDrag = false;
         
         [Header("Status Bar")]
         [Tooltip("Hide Unity status bar at the bottom")]

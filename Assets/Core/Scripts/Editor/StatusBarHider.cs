@@ -39,7 +39,6 @@ namespace EditorUtils
                         if (positionProperty != null)
                         {
                             _originalPosition = (Rect)positionProperty.GetValue(_appStatusBarInstance);
-                            Debug.Log($"AppStatusBar found and saved. Original position: {_originalPosition}");
                         }
                     }
                 }
@@ -54,8 +53,6 @@ namespace EditorUtils
         {
             try
             {
-                Debug.Log("=== Hiding Status Bar ===");
-                
                 EnsureInitialized();
                 
                 if (_appStatusBarInstance == null || _appStatusBarType == null)
@@ -81,7 +78,6 @@ namespace EditorUtils
                         positionProperty.SetValue(_appStatusBarInstance, newPosition);
                         
                         _isStatusBarHidden = true;
-                        Debug.Log($"Status bar hidden. Position changed from {currentPosition} to {newPosition}");
                         
                         // Немедленная перерисовка
                         var repaintMethod = _appStatusBarType.GetMethod("Repaint", BindingFlags.Public | BindingFlags.Instance);
@@ -106,8 +102,6 @@ namespace EditorUtils
         {
             try
             {
-                Debug.Log("=== Showing Status Bar ===");
-                
                 EnsureInitialized();
                 
                 if (_appStatusBarInstance == null || _appStatusBarType == null)
@@ -128,14 +122,12 @@ namespace EditorUtils
                         positionProperty.SetValue(_appStatusBarInstance, newPosition);
                         
                         _isStatusBarHidden = false;
-                        Debug.Log($"Status bar shown. Position changed from {currentPosition} to {newPosition}");
                         
                         // Принудительное включение через SetEnabled
                         var setEnabledMethod = _appStatusBarType.GetMethod("SetEnabled", BindingFlags.NonPublic | BindingFlags.Instance);
                         if (setEnabledMethod != null)
                         {
                             setEnabledMethod.Invoke(_appStatusBarInstance, new object[] { true });
-                            Debug.Log("SetEnabled(true) called");
                         }
                         
                         // Немедленная перерисовка
@@ -143,7 +135,6 @@ namespace EditorUtils
                         if (repaintMethod != null)
                         {
                             repaintMethod.Invoke(_appStatusBarInstance, null);
-                            Debug.Log("Status bar repainted immediately");
                         }
                         
                         // Дополнительное обновление через delayCall
@@ -162,14 +153,12 @@ namespace EditorUtils
                                         if (useBottomViewProperty != null)
                                         {
                                             useBottomViewProperty.SetValue(mainView, true);
-                                            Debug.Log("MainView.useBottomView forced to true");
                                         }
                                         
                                         var repaintMainView = mainViewType.GetMethod("Repaint", BindingFlags.Public | BindingFlags.Instance);
                                         if (repaintMainView != null)
                                         {
                                             repaintMainView.Invoke(mainView, null);
-                                            Debug.Log("MainView repainted");
                                         }
                                     }
                                 }
