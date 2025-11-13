@@ -1,4 +1,5 @@
 using System;
+using EditorUtils.WindowControls;
 using UnityEditor;
 using UnityEngine;
 
@@ -34,7 +35,7 @@ namespace EditorUtils
                 StartMenuBarMonitoring();
             }
             if (settings.hideTitleBar) HideTitleBar();
-            if (settings.showWindowControls) WindowControlsOverlay.ShowControls();
+            if (settings.showWindowControls) WindowControlsCoordinator.ShowControls();
             if (settings.hideStatusBar) StatusBarHider.HideStatusBar();
         }
         

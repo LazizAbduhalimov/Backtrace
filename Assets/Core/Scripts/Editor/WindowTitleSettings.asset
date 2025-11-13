@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp-Editor::EditorUtils.WindowTitleSettings
   hideTitleBar: 1
   hideMenuBar: 1
-  showWindowControls: 0
-  hideStatusBar: 1
+  showWindowControls: 1
+  showMenuBar: 1
+  enableWindowDrag: 1
+  hideStatusBar: 0

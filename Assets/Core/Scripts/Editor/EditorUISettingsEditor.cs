@@ -55,12 +55,12 @@ namespace EditorUtils
                 if (settings.showWindowControls)
                 {
                     Debug.Log("Window Controls checkbox checked - showing window controls");
-                    WindowControlsOverlay.ShowWindowControls();
+                    EditorUtils.WindowControls.WindowControlsCoordinator.ShowWindowControls();
                 }
                 else
                 {
                     Debug.Log("Window Controls checkbox unchecked - hiding window controls");
-                    WindowControlsOverlay.HideWindowControls();
+                    EditorUtils.WindowControls.WindowControlsCoordinator.HideWindowControls();
                 }
             }
             
@@ -70,12 +70,12 @@ namespace EditorUtils
                 if (settings.showMenuBar)
                 {
                     Debug.Log("MenuBar Button checkbox checked - showing MenuBar button");
-                    WindowControlsOverlay.ShowMenuBarButton();
+                    EditorUtils.WindowControls.WindowControlsCoordinator.ShowMenuBarButton();
                 }
                 else
                 {
                     Debug.Log("MenuBar Button checkbox unchecked - hiding MenuBar button");
-                    WindowControlsOverlay.HideMenuBarButton();
+                    EditorUtils.WindowControls.WindowControlsCoordinator.HideMenuBarButton();
                 }
             }
             
@@ -110,12 +110,12 @@ namespace EditorUtils
                 if (settings.enableWindowDrag)
                 {
                     Debug.Log("Window Drag checkbox checked - enabling window drag");
-                    WindowControlsOverlay.ShowDragArea();
+                    EditorUtils.WindowControls.WindowControlsCoordinator.ShowDragArea();
                 }
                 else
                 {
                     Debug.Log("Window Drag checkbox unchecked - disabling window drag");
-                    WindowControlsOverlay.HideDragArea();
+                    EditorUtils.WindowControls.WindowControlsCoordinator.HideDragArea();
                 }
             }
         }
