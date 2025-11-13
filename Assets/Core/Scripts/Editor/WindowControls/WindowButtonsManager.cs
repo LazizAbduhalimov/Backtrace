@@ -76,6 +76,20 @@ namespace EditorUtils.WindowControls
                     }
                 };
 
+                // Добавляем вертикальную разделительную линию
+                var separator = new VisualElement()
+                {
+                    style = {
+                        width = 1,
+                        backgroundColor = new Color(0.5f, 0.5f, 0.5f, 0.3f),
+                        marginLeft = 4,
+                        marginRight = 4,
+                        marginTop = 2,
+                        marginBottom = 2
+                    }
+                };
+                container.Add(separator);
+
                 // Кнопка минимизации (желтый/оранжевый круг)
                 var minimizeButton = CreateCircleButton(new Color(1.0f, 0.8f, 0.0f), "Minimize window", MinimizeWindow);
                 container.Add(minimizeButton);
@@ -88,7 +102,7 @@ namespace EditorUtils.WindowControls
                 var closeButton = CreateCircleButton(new Color(1.0f, 0.3f, 0.3f), "Close window", CloseWindow);
                 container.Add(closeButton);
 
-                rightZone.Add(container);
+                rightZone.Insert(0, container);
             }
             catch (Exception e)
             {
@@ -378,12 +392,24 @@ namespace EditorUtils.WindowControls
         {
             try
             {
-                if (_unityWindowHandle == IntPtr.Zero)
-                    _unityWindowHandle = GetUnityMainWindow();
+                // Показываем диалог подтверждения
+                bool confirmClose = EditorUtility.DisplayDialog(
+                    "Закрыть Unity Editor",
+                    "Вы действительно хотите закрыть Unity Editor?\n\nУбедитесь, что все изменения сохранены.",
+                    "Да, закрыть",
+                    "Отмена"
+                );
 
-                if (_unityWindowHandle != IntPtr.Zero)
+                // Если пользователь подтвердил закрытие
+                if (confirmClose)
                 {
-                    SendMessage(_unityWindowHandle, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
+                    if (_unityWindowHandle == IntPtr.Zero)
+                        _unityWindowHandle = GetUnityMainWindow();
+
+                    if (_unityWindowHandle != IntPtr.Zero)
+                    {
+                        SendMessage(_unityWindowHandle, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
+                    }
                 }
             }
             catch (Exception e)
